@@ -23,7 +23,7 @@ def generate_date_pattern():
         #case: April, June, September
         date_pattern += ("(%s%s%s%s%s)|") % ("([0-2][0-9]|30)", separator, "(0[469]|11)", separator, year_pattern)
         #case: February
-        date_pattern += ("(%s%s%s%s%s)|") % ("29", separator, "02", separator, year_pattern)
+        date_pattern += ("(%s%s%s%s%s)|") % ("[0-2][0-9]", separator, "02", separator, year_pattern)
 
     #date_pattern must be returned without the last char (which is "|")
     return (date_pattern[:len(date_pattern) - 1] + ")\b")
