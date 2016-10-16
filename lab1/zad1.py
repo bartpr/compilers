@@ -22,6 +22,8 @@ def generate_date_pattern():
     #date_pattern must be returned without the last char (which is "|")
     return (date_pattern[:len(date_pattern) - 1] + ")")
 
+def from_meta_regexp(type_):
+    return re.compile('<META NAME="' + type_ + '" CONTENT="(.+?)">')
 
 #patterns
 sentence_pattern = r"([^.!?]+\s?)*(\w|\))+(\.|(!|\?)+)"
@@ -33,25 +35,27 @@ email_pattern = r"\b\w+@\w+(\.\w+)*\.\w+\b" # TODO: (optional) non-alfanumeric s
 
 def processFile(filepath):
     fp = codecs.open(filepath, 'rU', 'iso-8859-2')
-
     content = fp.read()
 
     # TODO: process file, SOME_TEXT_TO_PROCESS
 
+    SOME_TEXT_TO_PROCESS = ''.join(re.compile(r'<P[\s\S]*<META NAME=', re.MULTILINE).findall(content))
+    META_TEXT_TO_PROCESS = ''.join(re.compile('^<META NAME.+$', re.MULTILINE).findall(content))
+
     fp.close()
     print("nazwa pliku:", filepath)
-    print("autor:")
-    print("dzial:")
+    print("autor:", from_meta_regexp('AUTOR').findall(META_TEXT_TO_PROCESS))
+    print("dzial:", from_meta_regexp('DZIAL').findall(META_TEXT_TO_PROCESS))
     print("slowa kluczowe:")
-    print("liczba zdan:", len(re.findall(sentence_pattern, re.sub(date_pattern, "date", re.sub(email_pattern, "email", re.sub(float_pattern, "float", re.sub(shortcut_pattern, "shortcut", to_process)))))))
+    #print("liczba zdan:", len(re.findall(sentence_pattern, re.sub(date_pattern, "date", re.sub(email_pattern, "email", re.sub(float_pattern, "float", re.sub(shortcut_pattern, "shortcut", SOME_TEXT_TO_PROCESS)))))))
     print("liczba skrotow:", len(re.findall(shortcut_pattern, SOME_TEXT_TO_PROCESS)))
     print("liczba liczb calkowitych z zakresu int:", len(re.findall(int_pattern, SOME_TEXT_TO_PROCESS)))
-    print("liczba liczb zmiennoprzecinkowych:", len(re.findall(float_pattern, SOME_TEXT_TO_PROCESS))
+    print("liczba liczb zmiennoprzecinkowych:", len(re.findall(float_pattern, SOME_TEXT_TO_PROCESS)))
     print("liczba dat:", len(re.findall(date_pattern, SOME_TEXT_TO_PROCESS)))
     print("liczba adresow email:", len(re.findall(email_pattern, SOME_TEXT_TO_PROCESS)))
     print("\n")
-
-
+#
+   # print("metatext:", META_TEXT_TO_PROCESS)
 
 try:
     path = sys.argv[1]
