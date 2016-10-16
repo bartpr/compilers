@@ -60,7 +60,7 @@ def get_unique_data_number(_list, _type):
     return len(unique_list)
 
 #patterns
-sentence_pattern = r"([^.!?]+\s?)*(\w|\))+(\.|(!|\?)+)" #TODO not a sentence when a float, a shortcut or an email
+sentence_pattern = r"\w(\.|\s)*(\w)+(\.|(!|\?)+)"
 shortcut_pattern = r"(\b[a-zA-Z]{1,3}\.)"
 int_pattern = r"((^|(?<=\s))(-)?(?(3)([1-9]|[1-9][0-9]{,3}|3276[0-8]|327[0-5][0-9]|32[0-6][0-9][0-9]|3[0-1][0-9][0-9][0-9])|([0-9]|[1-9][0-9]{,3}|3276[0-7]|327[0-5][0-9]|32[0-6][0-9][0-9]|3[0-1][0-9][0-9][0-9]))($|(?=\s)))"
 float_pattern = r"((^|(?<=\s))(-)?([0-9]*)(\.)(?(4)([0-9]*|[0-9]+))(e[+-][0-9]+)?($|(?=\s)))"
