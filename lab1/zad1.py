@@ -54,8 +54,7 @@ def processFile(filepath):
     print("liczba dat:", len(re.findall(date_pattern, SOME_TEXT_TO_PROCESS)))
     print("liczba adresow email:", len(re.findall(email_pattern, SOME_TEXT_TO_PROCESS)))
     print("\n")
-#
-   # print("metatext:", META_TEXT_TO_PROCESS)
+  
 
 try:
     path = sys.argv[1]
