@@ -9,7 +9,7 @@ import codecs
 def generate_date_pattern():
     separators = [r"-", r"\.", r"/"]
     #year_pattern accepts all years from 1000 to 2016 (yyyy)
-    year_pattern = r"(1[0-9]{3}|20[01][0-6])"
+    year_pattern = r"(1[0-9]{3}|20[01][0-6]|200[7-9])"
     date_pattern = r"\b("
     #probably can be done more compressed
     for separator in separators:
@@ -26,8 +26,8 @@ def generate_date_pattern():
     #date_pattern must be returned without the last char (which is "|")
     return (date_pattern[:len(date_pattern) - 1] + r")\b")
 
-def from_meta_regexp(type_):
-    return re.compile('<META NAME="' + type_ + '" CONTENT="(.+?)">')
+def from_meta_regexp(meta_name):
+    return re.compile('<META NAME="' + meta_name + '" CONTENT="(.+?)">')
 
 def get_date_format(item):
     if re.match(r"[0-9]{2}-.", item):
@@ -72,14 +72,14 @@ def processFile(filepath):
     fp = codecs.open(filepath, 'rU', 'iso-8859-2')
     content = fp.read()
 
-    SOME_TEXT_TO_PROCESS = ''.join(re.compile(r'<P[\s\S]*<META NAME=', re.MULTILINE).findall(content))
-    META_TEXT_TO_PROCESS = ''.join(re.compile('^<META NAME.+$', re.MULTILINE).findall(content))
+    SOME_TEXT_TO_PROCESS = '\n'.join(re.compile(r'<P[\s\S]*<META NAME=', re.MULTILINE).findall(content))
+    META_TEXT_TO_PROCESS = '\n'.join(re.compile('^<META NAME.+$', re.MULTILINE).findall(content))
 
     fp.close()
     print("nazwa pliku:", filepath)
     print("autor:", ', '.join(from_meta_regexp('AUTOR').findall(META_TEXT_TO_PROCESS)))
     print("dzial:", ', '.join(from_meta_regexp('DZIAL').findall(META_TEXT_TO_PROCESS)))
-    print("slowa kluczowe:", ', '.join(from_meta_regexp(r"KLUCZOWE_\d").findall(META_TEXT_TO_PROCESS)))
+    print("slowa kluczowe:", ', '.join(from_meta_regexp(r'KLUCZOWE_\d').findall(META_TEXT_TO_PROCESS)))
     print("liczba zdan:", len(re.findall(sentence_pattern, re.sub(date_pattern, "date", re.sub(email_pattern, "email", re.sub(float_pattern, "float", re.sub(shortcut_pattern, "shortcut", SOME_TEXT_TO_PROCESS)))))))
     print("liczba skrotow:", get_unique_data_number(re.findall(shortcut_pattern, SOME_TEXT_TO_PROCESS), "shortcut"))
     print("liczba liczb calkowitych z zakresu int:", get_unique_data_number(re.findall(int_pattern, SOME_TEXT_TO_PROCESS), "int"))
