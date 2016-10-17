@@ -77,9 +77,9 @@ def processFile(filepath):
 
     fp.close()
     print("nazwa pliku:", filepath)
-    print("autor:", from_meta_regexp('AUTOR').findall(META_TEXT_TO_PROCESS))
-    print("dzial:", from_meta_regexp('DZIAL').findall(META_TEXT_TO_PROCESS))
-    print("slowa kluczowe:")
+    print("autor:", ', '.join(from_meta_regexp('AUTOR').findall(META_TEXT_TO_PROCESS)))
+    print("dzial:", ', '.join(from_meta_regexp('DZIAL').findall(META_TEXT_TO_PROCESS)))
+    print("slowa kluczowe:", ', '.join(from_meta_regexp(r"KLUCZOWE_\d").findall(META_TEXT_TO_PROCESS)))
     print("liczba zdan:", len(re.findall(sentence_pattern, re.sub(date_pattern, "date", re.sub(email_pattern, "email", re.sub(float_pattern, "float", re.sub(shortcut_pattern, "shortcut", SOME_TEXT_TO_PROCESS)))))))
     print("liczba skrotow:", get_unique_data_number(re.findall(shortcut_pattern, SOME_TEXT_TO_PROCESS), "shortcut"))
     print("liczba liczb calkowitych z zakresu int:", get_unique_data_number(re.findall(int_pattern, SOME_TEXT_TO_PROCESS), "int"))
