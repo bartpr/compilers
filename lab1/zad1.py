@@ -5,7 +5,6 @@ import sys
 import re
 import codecs
 
-#pattern generators
 def generate_date_pattern():
     separators = [r"-", r"\.", r"/"]
     #year_pattern accepts all years from 1000 to 2016 (yyyy)
@@ -61,8 +60,8 @@ def get_unique_data_number(_list, _type):
     return len(unique_list)
 
 #patterns
-sentence_pattern = r"\w(\.|\s)*(\w)+(\.|(!|\?)+)"
-shortcut_pattern = r"(\b[a-zA-Z]{1,3}\.)"
+sentence_pattern = ur"(\w|\s)*\w+(\.|(!|\?)+)"
+shortcut_pattern = ur"((^|(?<=\s)|<.+>)([a-zA-Z]{1,3}\.)($|(?=\s)|<.+>))"
 int_pattern = r"((\b|^)((-)?((?(2)([1-9]|3276[0-8])|([0-9]|3276[0-7]))|[1-9][0-9]{,4}|327[0-5][0-9]|32[0-6][0-9][0-9]|3[0-1][0-9][0-9][0-9]))\b)"
 float_pattern = r"(-?([0-9]*\.[0-9]+[eE][+-][0-9]+|[0-9]*\.[0-9]+|[0-9]+\.[0-9]*))"
 date_pattern = generate_date_pattern()
@@ -80,8 +79,12 @@ def processFile(filepath):
     print("autor:", ', '.join(from_meta_regexp('AUTOR').findall(META_TEXT_TO_PROCESS)))
     print("dzial:", ', '.join(from_meta_regexp('DZIAL').findall(META_TEXT_TO_PROCESS)))
     print("slowa kluczowe:", ', '.join(from_meta_regexp(r'KLUCZOWE_\d').findall(META_TEXT_TO_PROCESS)))
-    print("liczba zdan:", len(re.findall(sentence_pattern, re.sub(date_pattern, "date", re.sub(email_pattern, "email", re.sub(float_pattern, "float", re.sub(shortcut_pattern, "shortcut", SOME_TEXT_TO_PROCESS)))))))
-    print("liczba skrotow:", get_unique_data_number(re.findall(shortcut_pattern, SOME_TEXT_TO_PROCESS), "shortcut"))
+    print("liczba zdan:", len(re.findall(sentence_pattern, \
+                                re.sub(date_pattern, "date", \
+                                re.sub(email_pattern, "email", \
+                                re.sub(float_pattern, "float", \
+                                re.sub(shortcut_pattern, "shortcut", SOME_TEXT_TO_PROCESS, re.UNICODE)))), re.UNICODE)))
+    print("liczba skrotow:", get_unique_data_number(re.findall(shortcut_pattern, SOME_TEXT_TO_PROCESS, re.UNICODE), "shortcut"))
     print("liczba liczb calkowitych z zakresu int:", get_unique_data_number(re.findall(int_pattern, SOME_TEXT_TO_PROCESS), "int"))
     print("liczba liczb zmiennoprzecinkowych:", get_unique_data_number(re.findall(float_pattern, SOME_TEXT_TO_PROCESS), "float"))
     print("liczba dat:", get_unique_data_number(re.findall(date_pattern, SOME_TEXT_TO_PROCESS), "date"))
