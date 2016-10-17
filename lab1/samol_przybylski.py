@@ -64,7 +64,7 @@ def get_unique_data_number(_list, _type):
 
 # ---patterns used in program---
 sentence_pattern = r"(\w|\s)*\w+(\.|(!|\?)+)"
-shortcut_pattern = r"((^|(?<=\s)|<.+>)(([a-zA-Z]|[\u0104-\u017c]){1,3}\.)($|(?=\s)|<.+>))"
+shortcut_pattern = r"((^|(?<=\s)|<.+>)(([a-zA-Z]|[\u0104-\u017c]){1,3}\.)($|(?=\s)|<.+>))" #u0104-u017c for polish letters
 int_pattern = r"((\b|^)((-)?((?(2)([1-9]|3276[0-8])|([0-9]|3276[0-7]))|[1-9][0-9]{,4}|327[0-5][0-9]|32[0-6][0-9][0-9]|3[0-1][0-9][0-9][0-9]))\b)"
 float_pattern = r"(-?([0-9]*\.[0-9]+[eE][+-][0-9]+|[0-9]*\.[0-9]+|[0-9]+\.[0-9]*))"
 date_pattern = generate_date_pattern()
