@@ -143,7 +143,7 @@ class TreePrinter:
     @addToClass(AST.GroupedExpression)
     def printTree(self, level=0):
         #sprawdzic
-        return self.expressions.printTree(level)
+        return self.expression.printTree(level)
 
     @addToClass(AST.FunctionExpression)
     def printTree(self, level=0):
@@ -153,7 +153,7 @@ class TreePrinter:
     @addToClass(AST.ExpressionList)
     def printTree(self, level=0):
         ret = ""
-        for e in self.expression:
+        for e in self.expressions:
             ret += str(e) + "\n"
         return ret
 
@@ -162,8 +162,7 @@ class TreePrinter:
     @addToClass(AST.FunctionExpression)
     def printTree(self, level=0):
         ret = "| " * level
-        return ret + "FUNDEF\n" + "| " + ret + str(self.id_) + "\n" + "| " + ret + "RET " + str(self.type_) + "\n" +\
-               self.compound_instr.printTree(level + 1) + self.body.printTree(level)
+        return ret + "FUNDEF\n" + "| " + ret + str(self.id_) + "\n" + "| " + ret + "RET " + self.expr_list.printTree(level + 1)
 
 
     @addToClass(AST.ArgumentsList)
