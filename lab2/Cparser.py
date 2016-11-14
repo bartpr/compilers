@@ -36,38 +36,53 @@ class Cparser(object):
             print("Syntax error at line {0}, column {1}: LexToken({2}, '{3}')".format(p.lineno, self.scanner.find_tok_column(p), p.type, p.value))
         else:
             print("Unexpected end of input")
+        self.error = True
 
 
 
     def p_program(self, p):
-        """program : program program_part
-                   | program_part """
+        """program : elements """
+
+        if not self.error:
+            print(AST.Program(p[1]))
+
+
+
+    def p_elements(self, p):
+        """elements : elements element
+                    | """
 
         if len(p) == 3:
-            p[0] = p[1]
-            p[0].add_program_part(p[2])
+            if p[1] is None:
+                p[0] = AST.Elements()
+            else:
+                p[0] = p[1]
+            p[0].add_element(p[2])
         else:
-            p[0] = AST.Program(p[1])
+            p[0] = AST.Elements()
 
 
 
-    def p_program_part(self, p):
-        """program_part : declarations
-                        | fundefs
-                        | instructions """
+    def p_element(self, p):
+        """element : declaration
+                   | fundef
+                   | instruction """
 
         p[0] = p[1]
 
 
     def p_declarations(self, p):
         """declarations : declarations declaration
-                        | declaration """
+                        | """
 
         if len(p) == 3:
-            p[0] = p[1]
+            if p[1] is None:
+                p[0] = AST.Declarations()
+            else:
+                p[0] = p[1]
             p[0].add_declaration(p[2])
         else:
-            p[0] = AST.Declarations(p[1])
+            p[0] = AST.Declarations()
 
 
     def p_declaration(self, p):
@@ -93,6 +108,17 @@ class Cparser(object):
         """init : ID '=' expression """
 
         p[0] = AST.Init(p[1], p[3])
+
+
+
+    def p_instructions_opt(self, p):
+        """instructions_opt : instructions
+                            | """
+
+        if len(p) == 2:
+            p[0] = p[1]
+        else:
+            p[0] = None
 
 
     def p_instructions(self, p):
@@ -187,25 +213,10 @@ class Cparser(object):
 
 
     def p_compound_instr(self, p):
-        """compound_instr : compound_instr compound_instr_part
-                          | compound_instr_part """
+        """compound_instr : '{' declarations instructions_opt '}' """
 
-        if len(p) == 3:
-            p[0] = p[1]
-            p[0].add_compound_instr(p[2])
-        else:
-            p[0] = AST.CompoundInstruction(p[1])
+        p[0] = AST.CompoundInstruction(p[2], p[3])
 
-
-    def p_compound_instr_part(self, p):
-        """compound_instr_part : declarations
-                               | instructions
-                               | """
-
-        if len(p) == 1:
-            p[0] = None
-        else:
-            p[0] = p[1]
 
 
     def p_condition(self, p):
@@ -280,22 +291,10 @@ class Cparser(object):
 
 
 
-
-    def p_fundefs(self, p):
-        """fundefs : fundefs fundef
-                   | fundef """
-
-        if len(p) == 3:
-            p[0] = p[1]
-            p[0].add_fun_def(p[2])
-        else:
-            p[0] = AST.FunctionsDefinitions(p[1])
-
-
     def p_fundef(self, p):
-        """fundef : TYPE ID '(' args_list_or_empty ')' '{' compound_instr '}' """
+        """fundef : TYPE ID '(' args_list_or_empty ')' compound_instr """
 
-        p[0] = AST.FunctionDefinition(p[1], p[2], p[4], p[7])
+        p[0] = AST.FunctionDefinition(p[1], p[2], p[4], p[6])
 
 
     def p_args_list_or_empty(self, p):
@@ -305,7 +304,7 @@ class Cparser(object):
         if len(p) == 1:
             p[0] = None
         else:
-            p[0] - p[1]
+            p[0] = p[1]
 
     def p_args_list(self, p):
         """args_list : args_list ',' arg

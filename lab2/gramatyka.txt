@@ -1,15 +1,18 @@
-program -> program program_part
-program -> program_part
-program_part -> declarations
-program_part -> fundefs
-program_part -> instructions
+program -> elements
+elements -> elements element
+elements -> <empty>
+element -> declaration
+element -> fundef
+element -> instruction
 declarations -> declarations declaration
-declarations -> declaration
+declarations -> <empty>
 declaration -> TYPE inits ;
 declaration -> error ;
 inits -> inits , init
 inits -> init
 init -> ID = expression
+instructions_opt -> instructions
+instructions_opt -> <empty>
 instructions -> instructions instruction
 instructions -> instruction
 instruction -> print_instr
@@ -37,11 +40,7 @@ repeat_instr -> REPEAT instructions UNTIL condition ;
 return_instr -> RETURN expression ;
 continue_instr -> CONTINUE ;
 break_instr -> BREAK ;
-compound_instr -> compound_instr compound_instr_part
-compound_instr -> compound_instr_part
-compound_instr_part -> declarations
-compound_instr_part -> instructions
-compount_instr_part -> <empty>
+compound_instr -> { declarations instructions_opt }
 condition -> expression
 const -> INTEGER
 const -> FLOAT
@@ -74,12 +73,9 @@ expr_list_or_empty -> expr_list
 expr_list_or_empty -> <empty>
 expr_list -> expr_list , expression
 expr_list -> expression
-fundefs -> fundefs fundef
-fundefs -> fundef
-fundef -> TYPE ID ( args_list_or_empty ) { compound_instr }
+fundef -> TYPE ID ( args_list_or_empty ) compound_instr
 args_list_or_empty -> args_list
 args_list_or_empty -> <empty>
 args_list -> args_list , arg
 args_list -> arg
 arg -> TYPE ID
-

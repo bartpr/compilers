@@ -39,20 +39,25 @@ class Variable(Node):
 
 class Program(Node):
 
-    def __init__(self, program_part):
-        self.program_parts = []
-        self.add_program_part(program_part)
+    def __init__(self, program):
+        self.program = program
 
-    def add_program_part(self, program_part):
-        self.program_parts.append(program_part)
+
+
+class Elements(Node):
+
+    def __init__(self):
+        self.elements = []
+
+    def add_element(element):
+        self.elements.append(element)
 
 
 
 class Declarations(Node):
 
-    def __init__(self, declaration):
+    def __init__(self):
         self.declarations = []
-        self.add_declaration(declaration)
 
     def add_declaration(self, declaration):
         self.declarations.append(declaration)
@@ -164,12 +169,9 @@ class BreakInstruction(Node):
 
 class CompoundInstruction(Node):
 
-    def __init__(self, compound_instr):
-        self.compound_instrs = []
-        self.add_compound_instr(compound_instr)
-
-    def add_compound_instr(self, compound_instr):
-        self.compound_instrs.append(compound_instr)
+    def __init__(self, declarations instructions_opt):
+        self.declarations = declarations
+        self instructions_opt = instructions_opt
 
 
 
@@ -199,17 +201,6 @@ class ExpressionList(Node):
 
 
 
-class FunctionsDefinitions(Node):
-
-    def __init__(self, fun_def):
-        self.fun_defs = []
-        self.add_fun_def(fun_def)
-
-    def add_fun_def(self, fun_def):
-        self.fundefs.append(fun_def)
-
-
-
 class FunctionDefinition(Node):
 
     def __init__(self, type_, id_, args_list, compound_instr):
@@ -236,5 +227,3 @@ class Argument(Node):
     def __init__(self, type_, id_):
         self.type_ = type_
         self.id_ = id_
-
-
