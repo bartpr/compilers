@@ -103,5 +103,77 @@ class TreePrinter:
 
     @addToClass(AST.Assignment)
     def printTree(self, level=0):
-        return "| " * level + "=\n" + "| "  * (level + 1) + str(self.id_) + "\n" + self.expr.printTree(indent + 1)
+        return "| " * level + "=\n" + "| "  * (level + 1) + str(self.id_) + "\n" + self.expression.printTree(level + 1)
 
+
+    @addToClass(AST.WhileInstruction)
+    def printTree(self, level=0):
+        ret = "| " * level
+        return ret + "WHILE\n" + self.condition.printTree(level + 1) + self.instruction.printTree(level)
+
+
+    @addToClass(AST.RepeatInstruction)
+    def printTree(self, level=0):
+        ret = "| " * level
+        return ret + "REPEAT\n" + self.instructions.printTree(level + 1) + "| "  * level + "UNTIL\n" + self.condition.printTree(level + 1)
+
+    @addToClass(AST.ReturnInstruction)
+    def printTree(self, level=0):
+        ret = "| " * level
+        return ret + "RETURN\n" + self.expression.printTree(level + 1)
+
+    @addToClass(AST.BreakInstruction)
+    def printTree(self, level=0):
+        ret = "| " * level
+        return ret + "BREAK\n"
+
+    @addToClass(AST.ContinueInstruction)
+    def printTree(self, level=0):
+        ret = "| " * level
+        return ret + "CONTINUE\n"
+
+    @addToClass(AST.CompoundInstruction)
+    def printTree(self, level=0):
+        return ("" if self.declarations is None else self.declarations.printTree(level + 1)) + self.instructions.printTree(level + 1)
+
+    @addToClass(AST.GroupedExpression)
+    def printTree(self, level=0):
+        #sprawdzic
+        return self.expressions.printTree(level)
+
+    @addToClass(AST.FunctionExpression)
+    def printTree(self, level=0):
+        ret = "| " * level #trzeba uzupelnic
+        return ret
+
+    @addToClass(AST.ExpressionList)
+    def printTree(self):
+        ret = ""
+        for e in self.expression:
+            ret += str(e) + "\n"
+        return ret
+
+
+    @addToClass(AST.FunctionsDefinitions)
+    def printTree(self):
+        ret = ""
+        x = ""
+        for f in self.fun_defs:
+            ret += x + str(f)
+            x = "\n"
+        return ret
+
+    @addToClass(AST.FunctionExpression)
+    def printTree(self, level=0):
+        ret = "| " * level
+        return ret + "FUNDEF\n" + "| " + ret + str(self.id_) + "\n" + "| " + ret + "RET " + str(self.type_) + "\n" +\
+               self.compound_instr.printTree(level + 1) + self.body.printTree(level)
+
+
+    @addToClass(AST.ArgumentsList)
+    def printTree(self, level=0):
+        return "".join(map(lambda x: x.printTree(level), self.args))
+
+    @addToClass(AST.Argument)
+    def printTree(self, level=0):
+        return "| " * level  + "ARG " +self.id_ + ": "+ self.type_ + "\n"
