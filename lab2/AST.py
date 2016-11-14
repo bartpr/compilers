@@ -39,8 +39,8 @@ class Variable(Node):
 
 class Program(Node):
 
-    def __init__(self, program):
-        self.program = program
+    def __init__(self, elements):
+        self.elements = elements
 
 
 

@@ -13,7 +13,7 @@ def addToClass(cls):
 class TreePrinter:
 
     @addToClass(AST.Node)
-    def printTree(self):
+    def printTree(self, level=0):
         raise Exception("printTree not defined in class " + self.__class__.__name__)
 
 
@@ -47,7 +47,7 @@ class TreePrinter:
 
     @addToClass(AST.Program)
     def printTree(self, level=0):
-        return self.program.printTree()
+        return self.elements.printTree()
 
     @addToClass(AST.Declarations)
     def printTree(self):
@@ -80,7 +80,7 @@ class TreePrinter:
         return ret
 
     @addToClass(AST.Instructions)
-    def printTree(self):
+    def printTree(self, level = 0):
         ret = ""
         x = ""
         for i in self.instructions:
@@ -147,7 +147,7 @@ class TreePrinter:
         return ret
 
     @addToClass(AST.ExpressionList)
-    def printTree(self):
+    def printTree(self, level=0):
         ret = ""
         for e in self.expression:
             ret += str(e) + "\n"
@@ -172,4 +172,16 @@ class TreePrinter:
 
     @addToClass(AST.Elements)
     def printTree(self, level=0):
-        return "".join(map(lambda x: x.printTree(level), self.elements))
+        ret = ""
+        for e in self.elements:
+            ret += str(e) + "\n"
+        return ret
+
+
+    @addToClass(AST.FunctionDefinition)
+    def printTree(self, level=0):
+        ret = "| "*level
+        ret1 = ret + "| "
+        return ret + "FUNDEF\n" + ret1 + str(self.id_) + "\n" + ret1 + "RET " + str(self.type_) + "\n" + self.args_list.printTree(level + 1) + \
+               self.compound_instr.printTree(level)
+        return ret
