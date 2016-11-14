@@ -50,7 +50,7 @@ class TreePrinter:
         return self.elements.printTree()
 
     @addToClass(AST.Declarations)
-    def printTree(self):
+    def printTree(self, level = 0):
         ret = ""
         x = ""
         for d in self.declarations:
@@ -59,9 +59,9 @@ class TreePrinter:
         return ret
 
     @addToClass(AST.Declaration)
-    def printTree(self, level = 0):
+    def printTree(self, level=0):
         ret = "| " * level
-        ret = ret + "DECL\n" + self.inits.printTree(level + 1)
+        ret = ret + "DECL\n" + ("" if self.inits is None else self.inits.printTree(level + 1))
         return ret
 
     @addToClass(AST.Inits)
@@ -89,7 +89,7 @@ class TreePrinter:
         return ret
 
     @addToClass(AST.Print)
-    def printTree(self, level):
+    def printTree(self, level=0):
         ret = "| " * level
         #tutaj nie jestem pewien
         ret += "PRINT\n" + str(self.expr_list)
@@ -134,7 +134,11 @@ class TreePrinter:
 
     @addToClass(AST.CompoundInstruction)
     def printTree(self, level=0):
-        return ("" if self.declarations is None else self.declarations.printTree(level + 1)) + self.instructions.printTree(level + 1)
+         if self.declarations is None:
+            ret=""
+         else:
+            ret=self.declarations.printTree(level + 1)
+            return ret + ("" if self.instructions_opt is None else self.instructions_opt.printTree(level + 1))
 
     @addToClass(AST.GroupedExpression)
     def printTree(self, level=0):
