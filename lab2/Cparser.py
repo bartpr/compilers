@@ -44,7 +44,8 @@ class Cparser(object):
     def p_program(self, p):
         """program : elements """
         if not self.error:
-            print(AST.Program(p[1]))
+            p[0] = AST.Program(p[1])
+            print(p[0])
 
 
 

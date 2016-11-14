@@ -23,7 +23,7 @@ class TreePrinter:
 
     @addToClass(AST.Const)
     def printTree(self, level=0):
-
+        ret = level * "| "
         ret = ret + str(self.value)
         return ret
 
@@ -47,7 +47,7 @@ class TreePrinter:
 
     @addToClass(AST.Program)
     def printTree(self, level=0):
-        return self.program
+        return self.program.printTree()
 
     @addToClass(AST.Declarations)
     def printTree(self):
@@ -76,7 +76,7 @@ class TreePrinter:
     @addToClass(AST.Init)
     def printTree(self, level = 0):
         ret = "| " * level
-        ret = ret + str(self.id) + "\n" + str(self.val)
+        ret = ret + str(self.id_) + "\n" + str(self.expression)
         return ret
 
     @addToClass(AST.Instructions)
