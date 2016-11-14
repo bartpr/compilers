@@ -43,7 +43,7 @@ class Program(Node):
         self.program_parts = []
         self.add_program_part(program_part)
 
-    def add_program_part(program_part):
+    def add_program_part(self, program_part):
         self.program_parts.append(program_part)
 
 
@@ -54,7 +54,7 @@ class Declarations(Node):
         self.declarations = []
         self.add_declaration(declaration)
 
-    def add_declaration(declaration):
+    def add_declaration(self, declaration):
         self.declarations.append(declaration)
 
 
@@ -73,7 +73,7 @@ class Inits(Node):
         self.inits = []
         self.add_init(init)
 
-    def add_init(init):
+    def add_init(self, init):
         self.add_init(init)
 
 
@@ -92,7 +92,7 @@ class Instructions(Node):
         self.instructions = []
         self.add_instruction(instruction)
 
-    def add_instruction(instruction):
+    def add_instruction(self, instruction):
         self.instructions.append(instruction)
 
 
@@ -116,7 +116,7 @@ class Assignment(Node):
 
     def __init__(self, id_, expression):
         self.id_ = id_
-        self.expression - expression
+        self.expression = expression
 
 
 
@@ -168,7 +168,7 @@ class CompoundInstruction(Node):
         self.compound_instrs = []
         self.add_compound_instr(compound_instr)
 
-    def add_compound_instr(compound_instr):
+    def add_compound_instr(self, compound_instr):
         self.compound_instrs.append(compound_instr)
 
 
@@ -194,7 +194,7 @@ class ExpressionList(Node):
         self.expressions = []
         self.add_expression(expression)
 
-    def add_expression(expression):
+    def add_expression(self, expression):
         self.expressions.append(expression)
 
 
@@ -205,7 +205,7 @@ class FunctionsDefinitions(Node):
         self.fun_defs = []
         self.add_fun_def(fun_def)
 
-    def add_fun_def(fun_def):
+    def add_fun_def(self, fun_def):
         self.fundefs.append(fun_def)
 
 
@@ -226,7 +226,7 @@ class ArgumentsList(Node):
         self.args = []
         self.add_arg(arg)
 
-    def add_arg(arg):
+    def add_arg(self, arg):
         self.args.append(arg)
 
 

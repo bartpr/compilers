@@ -74,7 +74,7 @@ class Cparser(object):
         """declaration : TYPE inits ';'
                        | error ';' """
 
-        if len(p) == 4
+        if len(p) == 4:
             p[0] = AST.Declaration(p[1], p[2])
 
 
@@ -248,14 +248,14 @@ class Cparser(object):
                       | ID '(' expr_list_or_empty ')'
                       | ID '(' error ')' """
 
-    if len(p) == 2:
-        p[0] = AST.Const(p[1])
-    elif p[1] == '(':
-        p[0] = AST.GroupedExpression(p[2])
-    elif p[2] == '(':
-        p[0] = AST.FunctionExpression(p[1], p[3])
-    else:
-        p[0] = AST.BinExpr(p[2], p[1], p[3])
+        if len(p) == 2:
+            p[0] = AST.Const(p[1])
+        elif p[1] == '(':
+            p[0] = AST.GroupedExpression(p[2])
+        elif p[2] == '(':
+            p[0] = AST.FunctionExpression(p[1], p[3])
+        else:
+            p[0] = AST.BinExpr(p[2], p[1], p[3])
 
 
     def p_expr_list_or_empty(self, p):
