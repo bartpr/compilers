@@ -169,9 +169,9 @@ class BreakInstruction(Node):
 
 class CompoundInstruction(Node):
 
-    def __init__(self, declarations instructions_opt):
+    def __init__(self, declarations, instructions_opt):
         self.declarations = declarations
-        self instructions_opt = instructions_opt
+        self.instructions_opt = instructions_opt
 
 
 

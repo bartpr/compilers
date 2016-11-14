@@ -154,14 +154,6 @@ class TreePrinter:
         return ret
 
 
-    @addToClass(AST.FunctionsDefinitions)
-    def printTree(self):
-        ret = ""
-        x = ""
-        for f in self.fun_defs:
-            ret += x + str(f)
-            x = "\n"
-        return ret
 
     @addToClass(AST.FunctionExpression)
     def printTree(self, level=0):
