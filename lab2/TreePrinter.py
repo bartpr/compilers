@@ -47,7 +47,7 @@ class TreePrinter:
 
     @addToClass(AST.Program)
     def printTree(self, level=0):
-        return self.program_parts.printTree()
+        return self.program
 
     @addToClass(AST.Declarations)
     def printTree(self):
@@ -169,3 +169,7 @@ class TreePrinter:
     @addToClass(AST.Argument)
     def printTree(self, level=0):
         return "| " * level  + "ARG " +self.id_ + ": "+ self.type_ + "\n"
+
+    @addToClass(AST.Elements)
+    def printTree(self, level=0):
+        return "".join(map(lambda x: x.printTree(level), self.elements))

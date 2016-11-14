@@ -11,6 +11,7 @@ class Cparser(object):
     def __init__(self):
         self.scanner = Scanner()
         self.scanner.build()
+        self.error = False
 
     tokens = Scanner.tokens
 
@@ -42,7 +43,6 @@ class Cparser(object):
 
     def p_program(self, p):
         """program : elements """
-
         if not self.error:
             print(AST.Program(p[1]))
 
