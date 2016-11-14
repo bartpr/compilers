@@ -19,7 +19,7 @@ class TreePrinter:
 
     @addToClass(AST.BinExpr)
     def printTree(self, level=0):
-        return  "| " * level + self.op + "\n" + self.left.printTree(level + 1) + self.right.printTree(level + 1)
+        return  "| " * level + self.op + "\n" + self.left.printTree(level + 1)+ '\n' + self.right.printTree(level + 1)
 
     @addToClass(AST.Const)
     def printTree(self, level=0):
@@ -83,7 +83,7 @@ class TreePrinter:
         ret = ""
         x = ""
         for i in self.instructions:
-            ret += x + str(i)
+            ret += x + i.printTree(level)
             x = "\n"
         return ret
 
@@ -102,13 +102,13 @@ class TreePrinter:
 
     @addToClass(AST.Assignment)
     def printTree(self, level=0):
-        return "| " * level + "=\n" + "| "  * (level + 1) + str(self.id_) + "\n" + self.expression.printTree(level + 1)
+        return "| " * level + "| " +"=\n" + "| "  * (level) + str(self.id_) + "\n" + self.expression.printTree(level)
 
 
     @addToClass(AST.WhileInstruction)
     def printTree(self, level=0):
         ret = "| " * level
-        return ret + "WHILE\n" + self.condition.printTree(level + 1) + self.instruction.printTree(level)
+        return ret + "WHILE\n" + self.condition.printTree(level + 1) + "\n" + self.instruction.printTree(level + 1)
 
 
     @addToClass(AST.RepeatInstruction)
@@ -154,7 +154,7 @@ class TreePrinter:
     def printTree(self, level=0):
         ret = ""
         for e in self.expressions:
-            ret += str(e) + "\n"
+            ret += e.printTree(level) + "\n"
         return ret
 
 
@@ -162,7 +162,7 @@ class TreePrinter:
     @addToClass(AST.FunctionExpression)
     def printTree(self, level=0):
         ret = "| " * level
-        return ret + "FUNDEF\n" + "| " + ret + str(self.id_) + "\n" + "| " + ret + "RET " + self.expr_list.printTree(level + 1)
+        return ret + "FUNDEF\n" + "| " + ret + str(self.id_) + "\n" + "| " + ret + "RET "+ "\n" + self.expr_list.printTree(level + 1)
 
 
     @addToClass(AST.ArgumentsList)
@@ -196,7 +196,9 @@ class TreePrinter:
         ret1 = ret + "| "
 
         if self.alternate_instruction == None:
-            ret += ret1  + "IF\n" + self.condition.printTree(level+2) + "\n" + self.instruction.printTree(level +1)
+            ret +=  "IF\n" + self.condition.printTree(level+1) + "\n" + self.instruction.printTree(level + 1)
         else:
-            ret += ret1 + "IF\n" + self.condition.printTree(level+2) + "\n" + self.instruction.printTree(level + 1) + ret1 + "ELSE\n" + self.alternate_instruction.printTree(level + 1)
+            ret +=  "IF\n" + self.condition.printTree(level+1) + "\n" + self.instruction.printTree(level + 1) + ret1 + "ELSE\n" + self.alternate_instruction.printTree(level + 1)
+        #ret+=str(type(self.instruction))
         return ret
+
