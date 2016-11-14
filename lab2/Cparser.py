@@ -105,7 +105,8 @@ class Cparser(object):
                 p[0] = p[1]
             p[0].add_init(p[3])
         else:
-            p[0] = AST.Inits().add_init(p[1])
+            p[0] = AST.Inits()
+            p[0].add_init(p[1])
 
 
     def p_init(self, p):
@@ -136,7 +137,8 @@ class Cparser(object):
                 p[0] = p[1]
             p[0].add_instruction(p[2])
         else:
-            p[0] = AST.Instructions().add_instruction(p[1])
+            p[0] = AST.Instructions()
+            p[0].add_instruction(p[1])
 
 
 
@@ -297,7 +299,8 @@ class Cparser(object):
                 p[0] = p[1]
             p[0].add_expression(p[3])
         else:
-            p[0] = AST.ExpressionList().add_expression(p[1])
+            p[0] = AST.ExpressionList()
+            p[0].add_expression(p[1])
 
 
 
@@ -327,7 +330,8 @@ class Cparser(object):
                 p[0] = p[1]
             p[0].add_arg(p[3])
         else:
-            p[0] = AST.ArgumentsList().add_arg(p[1])
+            p[0] = AST.ArgumentsList()
+            p[0].add_arg(p[1])
 
     def p_arg(self, p):
         """arg : TYPE ID """
