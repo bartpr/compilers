@@ -196,7 +196,7 @@ class TreePrinter:
         ret1 = ret + "| "
 
         if self.alternate_instruction == None:
-            ret += ret1  + "IF\n" + self.condition.printTree(level+1) + "\n" + self.instruction.printTree(level +1)
+            ret += ret1  + "IF\n" + self.condition.printTree(level+2) + "\n" + self.instruction.printTree(level +1)
         else:
-            ret += ret1 + "IF\n" + self.condition.printTree(level+1) + "\n" + self.instruction.printTree(level + 1) + ret1 + "ELSE\n" + self.alternate_instruction.printTree(level + 1)
+            ret += ret1 + "IF\n" + self.condition.printTree(level+2) + "\n" + self.instruction.printTree(level + 1) + ret1 + "ELSE\n" + self.alternate_instruction.printTree(level + 1)
         return ret
