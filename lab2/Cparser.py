@@ -98,10 +98,13 @@ class Cparser(object):
                  | init """
 
         if len(p) == 4:
-            p[0] = p[1]
+            if p[1] is None:
+                p[0] = AST.Inits()
+            else:
+                p[0] = p[1]
             p[0].add_init(p[3])
         else:
-            p[0] = AST.Inits(p[1])
+            p[0] = AST.Inits().add_init(p[1])
 
 
     def p_init(self, p):
@@ -126,10 +129,13 @@ class Cparser(object):
                         | instruction """
 
         if len(p) == 3:
-            p[0] = p[1]
+            if p[1] is None:
+                p[0] = AST.Instructions()
+            else:
+                p[0] = p[1]
             p[0].add_instruction(p[2])
         else:
-            p[0] = AST.Instructions(p[1])
+            p[0] = AST.Instructions().add_instruction(p[1])
 
 
 
@@ -284,10 +290,13 @@ class Cparser(object):
                      | expression """
 
         if len(p) == 4:
-            p[0] = p[1]
+            if p[1] is None:
+                p[0] = AST.ExpressionList()
+            else:
+                p[0] = p[1]
             p[0].add_expression(p[3])
         else:
-            p[0] = AST.ExpressionList(p[1])
+            p[0] = AST.ExpressionList().add_expression(p[1])
 
 
 
@@ -311,10 +320,13 @@ class Cparser(object):
                      | arg """
 
         if len(p) == 4:
-            p[0] = p[1]
-            p[0].add_argument(p[3])
+            if p[1] is None:
+                p[0] = AST.ArgumentsList()
+            else:
+                p[0] = p[1]
+            p[0].add_arg(p[3])
         else:
-            p[0] = AST.ArgumentsList(p[1])
+            p[0] = AST.ArgumentsList().add_arg(p[1])
 
     def p_arg(self, p):
         """arg : TYPE ID """

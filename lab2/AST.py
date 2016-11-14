@@ -49,7 +49,7 @@ class Elements(Node):
     def __init__(self):
         self.elements = []
 
-    def add_element(element):
+    def add_element(self, element):
         self.elements.append(element)
 
 
@@ -74,12 +74,11 @@ class Declaration(Node):
 
 class Inits(Node):
 
-    def __init__(self, init):
+    def __init__(self):
         self.inits = []
-        self.add_init(init)
 
     def add_init(self, init):
-        self.add_init(init)
+        self.inits.append(init)
 
 
 
@@ -93,9 +92,8 @@ class Init(Node):
 
 class Instructions(Node):
 
-    def __init__(self, instruction):
+    def __init__(self):
         self.instructions = []
-        self.add_instruction(instruction)
 
     def add_instruction(self, instruction):
         self.instructions.append(instruction)
@@ -192,9 +190,8 @@ class FunctionExpression(Node):
 
 class ExpressionList(Node):
 
-    def __init__(self, expression):
+    def __init__(self):
         self.expressions = []
-        self.add_expression(expression)
 
     def add_expression(self, expression):
         self.expressions.append(expression)
@@ -213,9 +210,8 @@ class FunctionDefinition(Node):
 
 class ArgumentsList(Node):
 
-    def __init__(self, arg):
+    def __init__(self):
         self.args = []
-        self.add_arg(arg)
 
     def add_arg(self, arg):
         self.args.append(arg)
