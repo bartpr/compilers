@@ -104,7 +104,7 @@ class TreePrinter:
 
     @addToClass(AST.Assignment)
     def printTree(self, level=0):
-        return "| " * level + "| " +"=\n" + "| "  * (level) + str(self.id_) + "\n" + self.expression.printTree(level)
+        return "| " * level +"=\n" + "| "  * (level + 1) + str(self.id_) + "\n" + self.expression.printTree(level +1 )
 
 
     @addToClass(AST.WhileInstruction)
@@ -139,8 +139,8 @@ class TreePrinter:
          if self.declarations is None:
             ret+=""
          else:
-            ret+=self.declarations.printTree(level + 1) + "\n"
-            return ret + ("" if self.instructions_opt is None else self.instructions_opt.printTree(level + 1))
+            ret += self.declarations.printTree(level + 1) + "\n"
+         return ret + ("" if self.instructions_opt is None else self.instructions_opt.printTree(level + 1))
 
     @addToClass(AST.GroupedExpression)
     def printTree(self, level=0):
@@ -195,11 +195,11 @@ class TreePrinter:
     @addToClass(AST.ChoiceInstruction)
     def printTree(self, level=0):
 
-        ret = "| " * level
+        ret = "| " * level  + str(level)
 
         if self.alternate_instruction is None:
             ret +=  "IF\n" + self.condition.printTree(level+1) + "\n" + self.instruction.printTree(level + 1)
         else:
             ret +=  "IF\n" + self.condition.printTree(level + 1) + "\n" + self.instruction.printTree(level + 1) + ret + "ELSE\n" + self.alternate_instruction.printTree(level + 1)
-        #ret+=str(type(self.instruction))
+        #ret+=str(type(self.alternate_instruction))
         return ret
