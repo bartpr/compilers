@@ -68,8 +68,10 @@ class TreePrinter:
     def printTree(self, level=0):
         ret = "| " * level
         retu = ""
+        x = ""
         for i in self.inits:
-            retu += ret + "=\n" + i.printTree(level+1) + "\n"
+            retu += x + ret + "=\n" + i.printTree(level+1)
+            x = "\n"
         return retu
 
     @addToClass(AST.Init)
@@ -91,7 +93,7 @@ class TreePrinter:
     def printTree(self, level=0):
         ret = "| " * level
         #tutaj nie jestem pewien
-        ret += "PRINT\n" + str(self.expr_list)
+        ret += "PRINT\n" + self.expr_list.printTree(level + 1)
         return ret
 
 
@@ -137,7 +139,7 @@ class TreePrinter:
          if self.declarations is None:
             ret+=""
          else:
-            ret+=self.declarations.printTree(level + 1)
+            ret+=self.declarations.printTree(level + 1) + "\n"
             return ret + ("" if self.instructions_opt is None else self.instructions_opt.printTree(level + 1))
 
     @addToClass(AST.GroupedExpression)
@@ -153,16 +155,17 @@ class TreePrinter:
     @addToClass(AST.ExpressionList)
     def printTree(self, level=0):
         ret = ""
+        x = ""
         for e in self.expressions:
-            ret += e.printTree(level) + "\n"
+            ret += x + e.printTree(level)
+            x = "\n"
         return ret
-
 
 
     @addToClass(AST.FunctionExpression)
     def printTree(self, level=0):
         ret = "| " * level
-        return ret + "FUNDEF\n" + "| " + ret + str(self.id_) + "\n" + "| " + ret + "RET "+ "\n" + self.expr_list.printTree(level + 1)
+        return ret + "FUNCALL\n" + "| " + ret + str(self.id_) + "\n" + self.expr_list.printTree(level + 1) + "\n"
 
 
     @addToClass(AST.ArgumentsList)
@@ -193,12 +196,10 @@ class TreePrinter:
     def printTree(self, level=0):
 
         ret = "| " * level
-        ret1 = ret + "| "
 
-        if self.alternate_instruction == None:
+        if self.alternate_instruction is None:
             ret +=  "IF\n" + self.condition.printTree(level+1) + "\n" + self.instruction.printTree(level + 1)
         else:
-            ret +=  "IF\n" + self.condition.printTree(level+1) + "\n" + self.instruction.printTree(level + 1) + ret1 + "ELSE\n" + self.alternate_instruction.printTree(level + 1)
+            ret +=  "IF\n" + self.condition.printTree(level + 1) + "\n" + self.instruction.printTree(level + 1) + ret + "ELSE\n" + self.alternate_instruction.printTree(level + 1)
         #ret+=str(type(self.instruction))
         return ret
-
