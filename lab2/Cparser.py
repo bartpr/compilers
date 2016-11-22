@@ -60,7 +60,7 @@ class Cparser(object):
                 p[0] = p[1]
             p[0].add_element(p[2])
         else:
-            p[0] = AST.Elements()
+            p[0] = None
 
 
 
@@ -83,7 +83,7 @@ class Cparser(object):
                 p[0] = p[1]
             p[0].add_declaration(p[2])
         else:
-            p[0] = AST.Declarations()
+            p[0] = None
 
 
     def p_declaration(self, p):
@@ -271,7 +271,7 @@ class Cparser(object):
         if len(p) == 2:
             p[0] = AST.Const(p[1])
         elif p[1] == '(':
-            p[0] = AST.GroupedExpression(p[2])
+            p[0] = p[2]
         elif p[2] == '(':
             p[0] = AST.FunctionExpression(p[1], p[3])
         else:

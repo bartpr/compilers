@@ -173,10 +173,10 @@ class CompoundInstruction(Node):
 
 
 
-class GroupedExpression(Node):
+"""class GroupedExpression(Node):
 
     def __init__(self, expression):
-        self.expression = expression
+        self.expression = expression"""
 
 
 
