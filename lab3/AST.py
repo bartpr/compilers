@@ -13,8 +13,9 @@ class BinExpr(Node):
 
 
 class Const(Node):
-    def __init__(self, value):
+    def __init__(self, value, lineno):
         self.value = value
+        self.lineno = lineno
 
 
 class Integer(Const):
@@ -84,9 +85,10 @@ class Inits(Node):
 
 class Init(Node):
 
-    def __init__(self, id_, expression):
+    def __init__(self, id_, expression, lineno):
         self.id_ = id_;
         self.expression = expression
+        self.lineno = lineno
 
 
 
@@ -150,18 +152,20 @@ class RepeatInstruction(Node):
 
 class ReturnInstruction(Node):
 
-    def __init__(self, expression):
+    def __init__(self, expression, lineNo):
         self.expression = expression
 
 
 
 class ContinueInstruction(Node):
-    pass
+    def __init__(self, lineNo):
+        self.lineNo = lineNo
 
 
 
 class BreakInstruction(Node):
-    pass
+    def __init__(self, lineNo):
+        self.lineNo = lineNo
 
 
 
@@ -200,11 +204,12 @@ class ExpressionList(Node):
 
 class FunctionDefinition(Node):
 
-    def __init__(self, type_, id_, args_list, compound_instr):
+    def __init__(self, type_, id_, args_list, compound_instr, lineno):
         self.type_ = type_
         self.id_ = id_
         self.args_list = args_list
         self.compound_instr = compound_instr
+        self.lineno = lineno
 
 
 

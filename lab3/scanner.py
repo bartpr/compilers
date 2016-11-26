@@ -3,6 +3,8 @@ import ply.lex as lex
 
 class Scanner(object):
 
+  lineno = 0
+  lexpos = 0
 
   def find_tok_column(self, token):
       last_cr = self.lexer.lexdata.rfind('\n', 0, token.lexpos)

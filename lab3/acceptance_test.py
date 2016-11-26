@@ -21,10 +21,10 @@ class AcceptanceTests(unittest.TestCase):
             return 'test_' + filename
 
         def test_func(self):
-            os.system("python main.py {2}.in > {2}.actual".format(dirpath,filename,name))
+            os.system("\"" + sys.executable + "\" main.py {2}.in > {2}.actual".format(dirpath,filename,name))
             file_actual = "{0}.actual".format(name)
             file_expected = "{0}.expected".format(name)
-            res = filecmp.cmp(file_actual, file_expected)
+            res = open(file_actual, 'r').read() == open(file_expected, 'r').read()
             self.assertTrue(res, "files {0} and {1} differ\n---ACTUAL---\n{2}\n---EXPECTED---\n{3}\n---".format(file_actual,
                                                                                                                 file_expected,
                                                                                                                 open(file_actual, 'r').read(),
