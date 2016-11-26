@@ -112,7 +112,7 @@ class Cparser(object):
     def p_init(self, p):
         """init : ID '=' expression """
 
-        p[0] = AST.Init(p[1], p[3])
+        p[0] = AST.Init(p[1], p[3], p.lineno)
 
 
 
@@ -206,19 +206,19 @@ class Cparser(object):
     def p_return_instr(self, p):
         """return_instr : RETURN expression ';' """
 
-        p[0] = AST.ReturnInstruction(p[2])
+        p[0] = AST.ReturnInstruction(p[2], p.lineno)
 
 
     def p_continue_instr(self, p):
         """continue_instr : CONTINUE ';' """
 
-        p[0] = AST.ContinueInstruction()
+        p[0] = AST.ContinueInstruction(p.lineno)
 
 
     def p_break_instr(self, p):
         """break_instr : BREAK ';' """
 
-        p[0] = AST.BreakInstruction()
+        p[0] = AST.BreakInstruction(p.lineno)
 
 
     def p_compound_instr(self, p):
@@ -269,7 +269,7 @@ class Cparser(object):
                       | ID '(' error ')' """
 
         if len(p) == 2:
-            p[0] = AST.Const(p[1])
+            p[0] = AST.Const(p[1], p.lineno)
         elif p[1] == '(':
             p[0] = p[2]
         elif p[2] == '(':
@@ -307,7 +307,7 @@ class Cparser(object):
     def p_fundef(self, p):
         """fundef : TYPE ID '(' args_list_or_empty ')' compound_instr """
 
-        p[0] = AST.FunctionDefinition(p[1], p[2], p[4], p[6])
+        p[0] = AST.FunctionDefinition(p[1], p[2], p[4], p[6], p.lineno)
 
 
     def p_args_list_or_empty(self, p):

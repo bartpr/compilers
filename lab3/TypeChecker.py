@@ -58,7 +58,7 @@ class NodeVisitor(object):
 
 class TypeChecker(NodeVisitor):
     def __init__(self):
-        self.table = table = SymbolTable(None, "root")
+        self.table = SymbolTable(None, "root")
         self.actualType = ""
         self.inLoop = False;
 

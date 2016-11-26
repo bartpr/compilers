@@ -11,11 +11,8 @@ class VariableSymbol(Symbol):
 
 
 class SymbolTable(object):
-    entries = {}
-
-    def __init__(self, parent, name): # parent scope and symbol table name
-        pass
-    #
+    def __init__(self, parent, name):
+        self.entries = {}
 
     def put(self, name, symbol): # put variable symbol or fundef under <name> entry
         pass
