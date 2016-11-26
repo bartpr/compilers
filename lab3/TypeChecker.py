@@ -171,7 +171,7 @@ class TypeChecker(NodeVisitor):
     def visit_ArgumentsList(self, node):
         for arg in node.args:
             self.visit(arg)
-        #self.actualFun.loadParamsTypes()
+        self.actualFun.loadParamsTypes()
 
 
     def visit_Argument(self, node):
@@ -218,7 +218,9 @@ class TypeChecker(NodeVisitor):
             if (node.expr_list.lenght()) != len(connectedFunDef.params):
                 print("Error: Improper number of args in {} call: line {}".format(node.id_, node.lineno))
             else:
-                types = [self.visit(x) for x in node.expr_list.children]
+                types =[]
+                for x in node.expr_list.expressions:
+                    types.append(self.visit(x))
                 expectedTypes = connectedFunDef.params
                 for actual, expected in zip(types, expectedTypes):
                     if actual != expected and not (actual == "int" and expected == "float"):
@@ -245,9 +247,9 @@ class TypeChecker(NodeVisitor):
         type = self.visit(node.expression)
         if definition is None:
             print("Error: Variable '{0}' undefined in current scope: line {1}".format(node.id_, node.lineno))
-        elif type != definition.type:
-            if definition.type == "float" and definition == "int":
+        elif type != definition.type_:
+            if definition.type_ == "float" and definition == "int":
                 print("Warning: Possible loss of precision in {0}: line {1].".format(node.id_, node.lineno))
             else:
                 if type is not None:
-                    print("Error: Assignment of {0} to {1}: line {2}.".format(type, definition.type, node.line))
+                    print("Error: Assignment of {0} to {1}: line {2}.".format(type, definition.type_, node.line))

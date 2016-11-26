@@ -4,9 +4,10 @@ class Symbol():
 
 class VariableSymbol(Symbol):
 
-    def __init__(self, name, type):
 
-        pass
+    def __init__(self, name, type):
+        self.id_ = name
+        self.type_ = type
     #
 
 
@@ -28,7 +29,6 @@ class SymbolTable(object):
                     break
                 else:
                     i += 1
-    #
 
     def get(self, name): # get variable symbol or fundef from <name> entry
         try:
@@ -36,7 +36,6 @@ class SymbolTable(object):
             return ret
         except:
             return None
-    #
 
     def getParentScope(self):
         return self.parent
@@ -49,14 +48,6 @@ class SymbolTable(object):
                 return None
         else:
             return self.get(name)
-
-    def pushScope(self, name):
-        pass
-    #
-
-    def popScope(self):
-        pass
-    #
 
 
     class insideTable(Symbol):
