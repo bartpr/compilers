@@ -13,9 +13,21 @@ class VariableSymbol(Symbol):
 class SymbolTable(object):
     def __init__(self, parent, name):
         self.entries = {}
+        self.parent = parent
+        self.name = name
 
     def put(self, name, symbol): # put variable symbol or fundef under <name> entry
-        pass
+        if name not in self.entries.keys():
+            self.entries[name] = symbol
+        else:
+            i = 1
+            while True:
+                name = "@" * i
+                if name not in self.entries.keys():
+                    self.entries[name] = symbol
+                    break
+                else:
+                    i += 1
     #
 
     def get(self, name): # get variable symbol or fundef from <name> entry
@@ -27,8 +39,16 @@ class SymbolTable(object):
     #
 
     def getParentScope(self):
-        pass
-    #
+        return self.parent
+
+    def getGlobal(self, name):
+        if self.get(name) is None:
+            if self.getParentScope() is not None:
+                return self.getParentScope().getGlobal(name)
+            else:
+                return None
+        else:
+            return self.get(name)
 
     def pushScope(self, name):
         pass
@@ -47,5 +67,5 @@ class SymbolTable(object):
             self.table = table
 
         def loadParamsTypes(self):
-            self.params = [x.type for x in self.table.entries.values()]
+            self.params = [x.type_ for x in self.table.entries.values()]
 

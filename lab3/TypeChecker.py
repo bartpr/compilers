@@ -49,6 +49,8 @@ class NodeVisitor(object):
                     self.visit(child)
 
 
+
+
     # simpler version of generic_visit, not so general
     #def generic_visit(self, node):
     #    for child in node.children:
@@ -57,6 +59,7 @@ class NodeVisitor(object):
 
 
 class TypeChecker(NodeVisitor):
+
     def __init__(self):
         self.table = SymbolTable(None, "root")
         self.actualType = ""
@@ -168,12 +171,12 @@ class TypeChecker(NodeVisitor):
     def visit_ArgumentsList(self, node):
         for arg in node.args:
             self.visit(arg)
-        self.actualFun.loadParamsTypes()
+        #self.actualFun.loadParamsTypes()
 
 
     def visit_Argument(self, node):
         if self.table.get(node.id_) is not None:
-            print("Error: Variable '{}' already declared: line {}".format(node.name, node.line))
+            print("Error: Variable '{}' already declared: line {}".format(node.id_, node.lineno))
         self.table.put(node.id_, VariableSymbol(node.id_, node.type_))
 
 
@@ -199,3 +202,52 @@ class TypeChecker(NodeVisitor):
     def visit_Declarations(self, node):
         for declaration in node.declarations:
             self.visit(declaration)
+
+    def visit_Print(self, node):
+        self.visit(node.expr_list)
+
+    def visit_ExpressionList(self, node):
+        for exp in node.expressions:
+            self.visit(exp)
+
+    def visit_FunctionExpression(self, node):
+        connectedFunDef = self.table.getGlobal(node.id_)
+        if connectedFunDef is None or not isinstance(connectedFunDef, SymbolTable.insideTable):
+            print("Error: Call of undefined function '{}': line {}".format(node.id_, node.lineno))
+        else:
+            if (node.expr_list.lenght()) != len(connectedFunDef.params):
+                print("Error: Improper number of args in {} call: line {}".format(node.id_, node.lineno))
+            else:
+                types = [self.visit(x) for x in node.expr_list.children]
+                expectedTypes = connectedFunDef.params
+                for actual, expected in zip(types, expectedTypes):
+                    if actual != expected and not (actual == "int" and expected == "float"):
+                        print("Error: Improper type of args in {} call: line {}".\
+                            format(node.id_, node.lineno))
+                        break
+        return connectedFunDef.type
+
+
+    def visit_ChoiceInstruction(self, node):
+        self.visit(node.condition)
+        self.visit(node.instruction)
+        if node.alternate_instruction is not None:
+            self.visit(node.alternate_instruction)
+
+    def visit_WhileInstruction(self, node):
+        self.inLoop = True
+        self.visit(node.condition)
+        self.visit(node.instruction)
+        self.inLoop = False
+
+    def visit_Assignment(self, node):
+        definition = self.table.getGlobal(node.id_)
+        type = self.visit(node.expression)
+        if definition is None:
+            print("Error: Variable '{0}' undefined in current scope: line {1}".format(node.id_, node.lineno))
+        elif type != definition.type:
+            if definition.type == "float" and definition == "int":
+                print("Warning: Possible loss of precision in {0}: line {1].".format(node.id_, node.lineno))
+            else:
+                if type is not None:
+                    print("Error: Assignment of {0} to {1}: line {2}.".format(type, definition.type, node.line))

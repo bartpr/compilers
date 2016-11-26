@@ -1,5 +1,5 @@
 class Node(object):
-
+#wylaczenie drukowania drzew
     def __str__(self):
         return self.printTree()
 
@@ -104,8 +104,9 @@ class Instructions(Node):
 
 class Print(Node):
 
-    def __init__(self, expr_list):
+    def __init__(self, expr_list, lineNO):
         self.expr_list = expr_list
+        self.lineNo = lineNO
 
 
 
@@ -119,9 +120,10 @@ class LabeledInstruction(Node):
 
 class Assignment(Node):
 
-    def __init__(self, id_, expression):
+    def __init__(self, id_, expression, lineNO):
         self.id_ = id_
         self.expression = expression
+        self.lineno = lineNO
 
 
 
@@ -154,6 +156,7 @@ class ReturnInstruction(Node):
 
     def __init__(self, expression, lineNo):
         self.expression = expression
+        self.lineNo = lineNo
 
 
 
@@ -186,9 +189,10 @@ class CompoundInstruction(Node):
 
 class FunctionExpression(Node):
 
-    def __init__(self, id_, expr_list):
+    def __init__(self, id_, expr_list, lineno):
         self.id_ = id_
         self.expr_list = expr_list
+        self.lineno = lineno
 
 
 
@@ -199,6 +203,9 @@ class ExpressionList(Node):
 
     def add_expression(self, expression):
         self.expressions.append(expression)
+
+    def lenght(self):
+        return len(self.expressions)
 
 
 
@@ -225,6 +232,7 @@ class ArgumentsList(Node):
 
 class Argument(Node):
 
-    def __init__(self, type_, id_):
+    def __init__(self, type_, id_, lineno):
         self.type_ = type_
         self.id_ = id_
+        self.lineno = lineno
