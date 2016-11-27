@@ -49,6 +49,7 @@ class TreePrinter:
     def printTree(self, level=0):
         return self.elements.printTree()
 
+
     @addToClass(AST.Declarations)
     def printTree(self, level = 0):
         ret = ""

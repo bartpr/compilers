@@ -1,5 +1,4 @@
 class Node(object):
-#wylaczenie drukowania drzew
     def __str__(self):
         return self.printTree()
 

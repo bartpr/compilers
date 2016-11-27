@@ -227,8 +227,7 @@ class TypeChecker(NodeVisitor):
                         print("Error: Improper type of args in {} call: line {}".\
                             format(node.id_, node.lineno))
                         break
-        return connectedFunDef.type
-
+            return connectedFunDef.type
 
     def visit_ChoiceInstruction(self, node):
         self.visit(node.condition)

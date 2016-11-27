@@ -49,7 +49,6 @@ class SymbolTable(object):
         else:
             return self.get(name)
 
-
     class insideTable(Symbol):
         def __init__(self, name, type, table):
             self.name = name
