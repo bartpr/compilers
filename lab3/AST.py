@@ -5,10 +5,11 @@ class Node(object):
 
 class BinExpr(Node):
 
-    def __init__(self, op, left, right):
+    def __init__(self, op, left, right, lineno):
         self.op = op
         self.left = left
         self.right = right
+        self.lineno = lineno
 
 
 class Const(Node):

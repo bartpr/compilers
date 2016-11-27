@@ -285,7 +285,7 @@ class Cparser(object):
         elif p[2] == '(':
             p[0] = AST.FunctionExpression(p[1], p[3], p.lineno(1))
         else:
-            p[0] = AST.BinExpr(p[2], p[1], p[3])
+            p[0] = AST.BinExpr(p[2], p[1], p[3], p.lineno(1))
 
 
     def p_expr_list_or_empty(self, p):

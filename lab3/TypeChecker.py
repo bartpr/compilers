@@ -102,7 +102,7 @@ class TypeChecker(NodeVisitor):
                     self.table.put(node.id_, VariableSymbol(node.id_, self.actualType))
 
     def visit_Const(self, node):
-        print("heho")
+        pass
         #self.visit(node.value)
 
     def visit_Variable(self, node):
@@ -157,7 +157,9 @@ class TypeChecker(NodeVisitor):
                                                                                                          node.type_, node.lineno))
 
     def lookingForReturn(self, node):  # node to jest ccia�o funkcji wy�ej
-        if isinstance(node, list):
+        if isinstance(node, AST.Instructions):
+            nodeList = node.instructions
+        elif isinstance(node, list):
             nodeList = node
         elif hasattr(node, "children"):
             return self.lookingForReturn(node.children)
@@ -167,8 +169,7 @@ class TypeChecker(NodeVisitor):
             if element.__class__.__name__ == "ReturnInstruction":
                 return True
             elif element.__class__.__name__ == "ChoiceInstruction":
-                if (element.alternateAction is not None and self.findReturn(
-                        element.action) and self.findReturn(element.alternateAction)):
+                if (element.alternate_instruction is not None and self.lookingForReturn(element.instruction) and self.lookingForReturn(element.alternate_instruction)):
                     return True
             elif element.__class__.__name__ == "CompoundInstruction":
                 if (self.lookingForReturn(element.instructions_opt)):
@@ -204,7 +205,7 @@ class TypeChecker(NodeVisitor):
         type2 = self.visit(node.right)    # type2 = node.right.accept(self)
         op = node.op
         if ttype[op][type1][type2] is None and (type1 is not None and type2 is not None):
-            print("Error: Illegal operation, {} {} {}: line {}".format(type1, op, type2, node.line))
+            print("Error: Illegal operation, {} {} {}: line {}".format(type1, op, type2, node.lineno))
         return ttype[op][type1][type2]
 
     def visit_Declarations(self, node):
