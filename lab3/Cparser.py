@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import re
 
 from scanner import Scanner
 import AST
@@ -239,12 +240,20 @@ class Cparser(object):
                  | FLOAT
                  | STRING"""
 
-        p[0] = p[1]
+        #p[0] = p[1]
+        if re.match(r"\d+(\.\d*)|\.\d+", p[1]):
+            p[0] = AST.Float(p.lineno(1), p[1])
+        elif re.match(r"\d+", p[1]):
+            p[0] = AST.Integer(p.lineno(1), p[1])
+        else:
+            p[0] = AST.String(p.lineno(1), p[1])
 
+    def p_expression_id(self, p):
+        """expression : ID"""
+        p[0] = AST.Variable(p.lineno(1), p[1])
 
     def p_expression(self, p):
         """expression : const
-                      | ID
                       | expression '+' expression
                       | expression '-' expression
                       | expression '*' expression
@@ -269,7 +278,8 @@ class Cparser(object):
                       | ID '(' error ')' """
 
         if len(p) == 2:
-            p[0] = AST.Const(p[1], p.lineno(1))
+            #p[0] = AST.Const(p[1], p.lineno(1))
+            p[0] = p[1]
         elif p[1] == '(':
             p[0] = p[2]
         elif p[2] == '(':

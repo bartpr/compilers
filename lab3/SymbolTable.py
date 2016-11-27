@@ -59,3 +59,4 @@ class SymbolTable(object):
         def loadParamsTypes(self):
             self.params = [x.type_ for x in self.table.entries.values()]
 
+

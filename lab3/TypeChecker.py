@@ -82,8 +82,6 @@ class TypeChecker(NodeVisitor):
         self.visit(node.inits)
         self.actualType = ""
 
-
-
     def visit_Inits(self, node):
         for init in node.inits:
             self.visit(init)
@@ -93,24 +91,34 @@ class TypeChecker(NodeVisitor):
         if not(expType == self.actualType or (expType == "int" and self.actualType  == "float") or (expType == "float" and self.actualType == "int")):
             print("Error: Assignment of {} to {}: line {}".format(expType, self.actualType, node.lineno))
         else:
-            if self.table.get(node.name) is not None:
+            if self.table.get(node.id_) is not None:
                 print("Error: Variable '{}' already declared: line {}".\
-                    format(node.name, node.line))
+                    format(node.id_, node.lineno))
             else:
-                item = self.table.getGlobal(node.name)
+                item = self.table.getGlobal(node.id_)
                 if item is not None and item.__class__.__name__ == 'FunctionSymbol':
                     print("Error: Function identifier '{}' used as a variable: line {}".format(node.name, node.lineno))
                 else:
-                    self.table.put(node.name, VariableSymbol(node.name, self.actualType))
+                    self.table.put(node.id_, VariableSymbol(node.id_, self.actualType))
 
     def visit_Const(self, node):
-        self.visit(node.value)
+        print("heho")
+        #self.visit(node.value)
 
-    #TODO check str and const
+    def visit_Variable(self, node):
+        definition = self.table.getGlobal(node.name)
+        if definition.__class__.__name__ == 'FunctionSymbol':
+            print("Error: Function identifier '{}' used as a variable: line {}".format(node.name, node.line))
+        elif definition is None:
+            print("Error: Usage of undeclared variable '{0}': line {1}".format(node.name, node.line))
+        else:
+            return definition.type_
 
-    def visit_str(selfself, node):
-        pass
+    def visit_String(self, node):
+        return 'string'
 
+    def visit_Float(self, node):
+        return 'float'
 
     def visit_Integer(self, node):
         return 'int'

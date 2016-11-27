@@ -18,22 +18,24 @@ class Const(Node):
 
 
 class Integer(Const):
-    pass
+    def __init__(self, lineno, value):
+        Const.__init__(self, lineno, value)
 
 
 
-class Float(Const):
-    pass
-
+class Float( Const):
+    def __init__(self, lineno, value):
+        Const.__init__(self, lineno, value)
 
 
 class String(Const):
-    pass
+    def __init__(self, lineno, value):
+        Const.__init__(self, lineno, value)
 
-
-
-class Variable(Node):
-    pass
+class Variable(Const):
+    def __init__(self, lineno, name):
+        self.name = name
+        self.line = lineno
 
 
 
