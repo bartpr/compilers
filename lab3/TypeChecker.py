@@ -98,7 +98,7 @@ class TypeChecker(NodeVisitor):
                 item = self.table.getGlobal(node.id_)
                 #print(item.__class__.__name__ )
                 if isinstance(item, SymbolTable.insideTable):
-                    print("Error: Function identifier '{}' used as a variable: line {}".format(node.name, node.lineno))
+                    print("Error: Function identifier '{}' used as a variable: line {}".format(node.id_, node.lineno))
                 else:
                     self.table.put(node.id_, VariableSymbol(node.id_, self.actualType))
 
@@ -146,7 +146,7 @@ class TypeChecker(NodeVisitor):
         else:
             newTable = SymbolTable.insideTable(node.id_, node.type_, SymbolTable(self.table, node.id_))
             self.table.put(node.id_, newTable)
-            self.actualFun = newTable  # to samo dla whilow itd
+            self.actualFun = newTable  #ToDO to samo dla whilow itd
             self.table = self.actualFun.table
             if node.args_list is not None:
                 self.visit(node.args_list)
