@@ -5,11 +5,11 @@ class Node(object):
 
 class BinExpr(Node):
 
-    def __init__(self, op, left, right, lineno):
+    def __init__(self, op, left, right, lineNo):
         self.op = op
         self.left = left
         self.right = right
-        self.lineno = lineno
+        self.lineno = lineNo
 
 
 class Const(Node):
@@ -176,9 +176,10 @@ class BreakInstruction(Node):
 
 class CompoundInstruction(Node):
 
-    def __init__(self, declarations, instructions_opt):
+    def __init__(self, declarations, instructions_opt, endLine):
         self.declarations = declarations
         self.instructions_opt = instructions_opt
+        self.endLine = endLine
 
 
 

@@ -96,7 +96,8 @@ class TypeChecker(NodeVisitor):
                     format(node.id_, node.lineno))
             else:
                 item = self.table.getGlobal(node.id_)
-                if item is not None and item.__class__.__name__ == 'FunctionSymbol':
+                #print(item.__class__.__name__ )
+                if isinstance(item, SymbolTable.insideTable):
                     print("Error: Function identifier '{}' used as a variable: line {}".format(node.name, node.lineno))
                 else:
                     self.table.put(node.id_, VariableSymbol(node.id_, self.actualType))
@@ -107,7 +108,7 @@ class TypeChecker(NodeVisitor):
 
     def visit_Variable(self, node):
         definition = self.table.getGlobal(node.name)
-        if definition.__class__.__name__ == 'FunctionSymbol':
+        if isinstance(definition, SymbolTable.insideTable):
             print("Error: Function identifier '{}' used as a variable: line {}".format(node.name, node.line))
         elif definition is None:
             print("Error: Usage of undeclared variable '{0}': line {1}".format(node.name, node.line))
@@ -154,7 +155,7 @@ class TypeChecker(NodeVisitor):
             self.actualFun = None
             if not self.lookingForReturn(node.compound_instr):
                 print("Error: Missing return statement in function '{0}' returning {1}: line {2}".format(node.id_,
-                                                                                                         node.type_, node.lineno))
+                                                                                                         node.type_, node.compound_instr.endLine))
 
     def lookingForReturn(self, node):  # node to jest ccia�o funkcji wy�ej
         if isinstance(node, AST.Instructions):
