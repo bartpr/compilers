@@ -146,7 +146,7 @@ class TypeChecker(NodeVisitor):
         else:
             newTable = SymbolTable.insideTable(node.id_, node.type_, SymbolTable(self.table, node.id_))
             self.table.put(node.id_, newTable)
-            self.actualFun = newTable  #ToDO to samo dla whilow itd
+            self.actualFun = newTable
             self.table = self.actualFun.table
             if node.args_list is not None:
                 self.visit(node.args_list)
@@ -241,15 +241,43 @@ class TypeChecker(NodeVisitor):
 
     def visit_ChoiceInstruction(self, node):
         self.visit(node.condition)
+        new_table = SymbolTable.insideTable(node.id_, node.__class__.__name__, SymbolTable(self.table, node.id_))
+        self.table.put(node.id_, new_table)
+        self.actual_instr = new_table
+        self.table = self.actual_instr.table
         self.visit(node.instruction)
+        self.table = self.table.getParentScope()
+        self.actual_instr = None
         if node.alternate_instruction is not None:
+            new_table = SymbolTable.insideTable(node.id_, node.__class__.__name__ + "alternate", SymbolTable(self.table, node.id_))
+            self.table.put(node.id_, new_table)
+            self.actual_instr = new_table
+            self.table = self.actual_instr.table
             self.visit(node.alternate_instruction)
+            self.table = self.table.getParentScope()
+            self.actual_instr = None
 
     def visit_WhileInstruction(self, node):
         self.inLoop = True
         self.visit(node.condition)
+        new_table = SymbolTable.insideTable(node.id_, node.__class__.__name__, SymbolTable(self.table, node.id_))
+        self.table.put(node.id_, new_table)
+        self.actual_loop = new_table
+        self.table = self.actual_loop.table
         self.visit(node.instruction)
+        self.table = self.table.getParentScope()
+        self.actual_loop = None
         self.inLoop = False
+
+    def visit_RepeatInstruction(self, node):
+        self.visit(node.condition)
+        new_table = SymbolTable.insideTable(node.id_, node.__class__.__name__, SymbolTable(self.table, node.id_))
+        self.table.put(node.id_, new_table)
+        self.actual_instr = new_table
+        self.table = self.actual_instr.table
+        self.visit(node.instruction)
+        self.table = self.table.getParentScope()
+        self.actual_instr = None
 
     def visit_Assignment(self, node):
         definition = self.table.getGlobal(node.id_)

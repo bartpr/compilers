@@ -131,7 +131,8 @@ class Assignment(Node):
 
 class ChoiceInstruction(Node):
 
-    def __init__(self, condition, instruction, alternate_instruction):
+    def __init__(self, id_, condition, instruction, alternate_instruction):
+        self.id_ = id_
         self.condition = condition
         self.instruction = instruction
         self.alternate_instruction = alternate_instruction
@@ -140,7 +141,8 @@ class ChoiceInstruction(Node):
 
 class WhileInstruction(Node):
 
-    def __init__(self, condition, instruction):
+    def __init__(self, id_, condition, instruction):
+        self.id_ = id_
         self.condition = condition
         self.instruction = instruction
 
@@ -148,7 +150,8 @@ class WhileInstruction(Node):
 
 class RepeatInstruction(Node):
 
-    def __init__(self, instructions, condition):
+    def __init__(self, id_, instructions, condition):
+        self.id_ = id_
         self.instructions = instructions
         self.condition = condition
 
@@ -180,13 +183,6 @@ class CompoundInstruction(Node):
         self.declarations = declarations
         self.instructions_opt = instructions_opt
         self.endLine = endLine
-
-
-
-"""class GroupedExpression(Node):
-
-    def __init__(self, expression):
-        self.expression = expression"""
 
 
 

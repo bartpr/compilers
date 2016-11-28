@@ -3,6 +3,7 @@ import sys
 import filecmp
 import unittest
 import os
+import warnings
 
 class AcceptanceTests(unittest.TestCase):
 
@@ -21,6 +22,7 @@ class AcceptanceTests(unittest.TestCase):
             return 'test_' + filename
 
         def test_func(self):
+            warnings.simplefilter("ignore", ResourceWarning)
             os.system("\"" + sys.executable + "\" main.py {2}.in > {2}.actual".format(dirpath,filename,name))
             file_actual = "{0}.actual".format(name)
             file_expected = "{0}.expected".format(name)

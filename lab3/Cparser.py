@@ -13,6 +13,9 @@ class Cparser(object):
         self.scanner = Scanner()
         self.scanner.build()
         self.error = False
+        self.while_id = 0
+        self.if_id = 0
+        self.repeat_id = 0
 
     tokens = Scanner.tokens
 
@@ -188,20 +191,23 @@ class Cparser(object):
             alternate_instruction = p[7]
         else:
             alternate_instruction = None
-        p[0] = AST.ChoiceInstruction(p[3], p[5], alternate_instruction)
+        p[0] = AST.ChoiceInstruction(self.if_id, p[3], p[5], alternate_instruction)
+        self.if_id += 1
 
 
     def p_while_instr(self, p):
         """while_instr : WHILE '(' condition ')' instruction
                        | WHILE '(' error ')' instruction """
 
-        p[0] = AST.WhileInstruction(p[3], p[5])
+        p[0] = AST.WhileInstruction(self.while_id, p[3], p[5])
+        self.while_id += 1
 
 
     def p_repeat_instr(self, p):
         """repeat_instr : REPEAT instructions UNTIL condition ';' """
 
-        p[0] = AST.RepeatInstruction(p[2], p[4])
+        p[0] = AST.RepeatInstruction(self.repeat_id, p[2], p[4])
+        self.repeat_id += 1
 
 
     def p_return_instr(self, p):
