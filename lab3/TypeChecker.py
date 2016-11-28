@@ -137,7 +137,7 @@ class TypeChecker(NodeVisitor):
         else:
             expType = self.visit(node.expression)
             if expType != self.actualFun.type and (self.actualFun.type != "float" or expType != "int") and expType is not None:
-                print("Error: Improper returned type, expected {}, got {}: line {}".format(self.actualFun.type, type, node.lineNo))
+                print("Error: Improper returned type, expected {}, got {}: line {}".format(self.actualFun.type, expType, node.lineNo))
 
     def visit_FunctionDefinition(self, node):
         if self.table.get(node.id_):
