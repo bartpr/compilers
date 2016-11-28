@@ -193,7 +193,8 @@ class TypeChecker(NodeVisitor):
     def visit_CompoundInstruction(self, node):
         if node.declarations is not None:
             self.visit(node.declarations)
-        self.visit(node.instructions_opt)
+        if node.instructions_opt is not None:
+            self.visit(node.instructions_opt)
 
     def visit_Instructions(self, node):
         for instruction in node.instructions:
