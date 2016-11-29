@@ -10,7 +10,6 @@ class VariableSymbol(Symbol):
         self.type_ = type
     #
 
-
 class SymbolTable(object):
     def __init__(self, parent, name):
         self.entries = {}
@@ -23,7 +22,7 @@ class SymbolTable(object):
         else:
             i = 1
             while True:
-                name = "@" * i
+                name = "@" * i #TODO: ogarnąć, co to robi
                 if name not in self.entries.keys():
                     self.entries[name] = symbol
                     break
@@ -58,5 +57,3 @@ class SymbolTable(object):
 
         def loadParamsTypes(self):
             self.params = [x.type_ for x in self.table.entries.values()]
-
-

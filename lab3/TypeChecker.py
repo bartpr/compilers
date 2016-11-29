@@ -156,7 +156,7 @@ class TypeChecker(NodeVisitor):
             if not self.lookingForReturn(node.compound_instr):
                 print("Error: Missing return statement in function '{0}' returning {1}: line {2}".format(node.id_,
                                                                                                          node.type_, node.compound_instr.endLine))
-
+    #TODO: ładniejsze sprawdzenie, czy return - użyć boola i sprawdzać po kolei w xInstruction
     def lookingForReturn(self, node):  # node to jest ccia�o funkcji wy�ej
         if isinstance(node, AST.Instructions):
             nodeList = node.instructions
@@ -190,6 +190,7 @@ class TypeChecker(NodeVisitor):
         self.table.put(node.id_, VariableSymbol(node.id_, node.type_))
 
 
+    #TODO: Zasięg wąsów do compound_instr, a nie w instrukcjach bezpośrednio i w definicji funkcji(?)
     def visit_CompoundInstruction(self, node):
         if node.declarations is not None:
             self.visit(node.declarations)
