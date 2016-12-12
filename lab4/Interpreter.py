@@ -94,7 +94,11 @@ class Interpreter(object):
     @when(AST.Init)
     def visit(self, node, type_):
         expression_accept = node.expression.accept(self)
-        #TODO: rest
+        if len(self.functionMemory.stack) > 1:
+            self.functionMemory.peek().put(node.id_, expression_accept)
+        else:
+            self.globalMemory.peek().put(node.id_, expression_accept)
+        return expression_accept
 
     @when(AST.Instructions)
     def visit(self, node):
@@ -121,7 +125,7 @@ class Interpreter(object):
         while True:
             try:
                 node.instructions.accept(self)
-                if node.contition.accept(self):
+                if node.condition.accept(self):
                     break
             except BreakException:
                 break
@@ -144,16 +148,34 @@ class Interpreter(object):
 
     @when(AST.CompoundInstruction)
     def visit(self, node):
-        #TODO: something with memory
+        if len(self.functionMemory.stack) > 1:
+            self.functionMemory.push(Memory(node))
+        else:
+            self.globalMemory.push(Memory(node))
         if node.declarations is not None:
             node.declarations.accept(self)
         if node.instructions_opt is not None:
             node.instructions_opt.accept(self)
+        if len(self.functionMemory.stack) > 1:
+            self.functionMemory.pop()
+        else:
+            self.globalMemory.pop()
 
     @when(AST.FunctionExpression)
     def visit(self, node):
-        #TODO: body
-        pass
+        curr_fun = self.globalMemory.get(node.id_)
+        curr_fun_mem = Memory(node.id_)
+        if node.expr_list is not None:
+            for expr_arg, arg in zip(node.expr_list.expressions, curr_fun.args_list.args):
+                curr_fun_mem.put(arg.accept(self), expr_arg.accept(self))
+        self.functionMemory.push(curr_fun_mem)
+        try:
+            curr_fun.compound_instr.accept(self)
+        except ReturnValueException as return_value:
+            return return_value.value
+        finally:
+            self.functionMemory.pop()
+
 
     @when(AST.ExpressionList)
     def visit(self, node):
@@ -162,8 +184,7 @@ class Interpreter(object):
 
     @when(AST.FunctionDefinition)
     def visit(self, node):
-        #TODO: body
-        pass
+        self.globalMemory.peek().put(node.id_, node)
 
     @when(AST.ArgumentsList)
     def visit(self, node):
