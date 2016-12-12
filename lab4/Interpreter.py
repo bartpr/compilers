@@ -48,7 +48,6 @@ class Interpreter(object):
 
     @when(AST.String)
     def visit(self, node):
-        print(node.value)
         return node.value
 
     @when(AST.Variable)
@@ -109,7 +108,8 @@ class Interpreter(object):
 
     @when(AST.Print)
     def visit(self, node):
-        print(node.expr_list.accept(self)) # to check if end="\n\r" is needed
+        for item in node.expr_list.accept(self):
+            print(item, end='\r\n')
 
     @when(AST.LabeledInstruction)
     def visit(self, node):
@@ -182,8 +182,10 @@ class Interpreter(object):
 
     @when(AST.ExpressionList)
     def visit(self, node):
+        result = []
         for expression in node.expressions:
-            expression.accept(self)
+            result.append(expression.accept(self))
+        return result
 
     @when(AST.FunctionDefinition)
     def visit(self, node):
