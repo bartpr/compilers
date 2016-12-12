@@ -19,6 +19,9 @@ class Interpreter(object):
     def visit(self, node):
         r1 = node.left.accept(self)
         r2 = node.right.accept(self)
+        return eval("a" + node.op + "b", {"a": r1, "b": r2})
+
+        #TODO: ponizszy kutowy komentarz
         # try sth smarter than:
         # if(node.op=='+') return r1+r2
         # elsif(node.op=='-') ...
@@ -32,7 +35,7 @@ class Interpreter(object):
 
     @when(AST.Assignment)
     def visit(self, node):
-    #
+        pass
     #
 
     @when(AST.Const)
@@ -40,9 +43,12 @@ class Interpreter(object):
         return node.value
 
     # simplistic while loop interpretation
-    @when(AST.WhileInstr)
+    @when(AST.WhileInstruction)
     def visit(self, node):
-        r = None
-        while node.cond.accept(self):
-            r = node.body.accept(self)
-        return r
+        while node.condition.accept(self):
+            try:
+                node.instruction.accept(self)
+            except BreakException:
+                break
+            except ContinueException:
+                pass

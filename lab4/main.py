@@ -1,6 +1,7 @@
-
 import sys
+
 import ply.yacc as yacc
+
 from Cparser import Cparser
 from TypeChecker import TypeChecker
 from Interpreter import Interpreter
