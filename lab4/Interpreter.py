@@ -21,7 +21,10 @@ class Interpreter(object):
     def visit(self, node):
         r1 = node.left.accept(self)
         r2 = node.right.accept(self)
-        return eval("a" + node.op + "b", {"a": r1, "b": r2})
+        if type(r1) is int or type(r2) is int:
+            return int(eval("a" + node.op + "b", {"a": r1, "b": r2}))
+        else:
+            return eval("a" + node.op + "b", {"a": r1, "b": r2})
 
         #TODO: ponizszy kutowy komentarz
         # try sth smarter than:
