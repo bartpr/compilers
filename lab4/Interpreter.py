@@ -60,14 +60,14 @@ class Interpreter(object):
     # simplistic while loop interpretation
     @when(AST.WhileInstruction)
     def visit(self, node):
-        # while node.condition.accept(self):
-        #     try:
-        #         node.instruction.accept(self)
-        #     except BreakException:
-        #         break
-        #     except ContinueException:
-        #         pass
-        pass
+        while node.condition.accept(self):
+            try:
+                node.instruction.accept(self)
+            except BreakException:
+                break
+            except ContinueException:
+                pass
+        # pass
 
     @when(AST.Program)
     def visit(self, node):
@@ -75,13 +75,17 @@ class Interpreter(object):
 
     @when(AST.Elements)
     def visit(self, node):
+        result = []
         for element in node.elements:
-            element.accept(self)
+            result.append(element.accept(self))
+        return result
 
     @when(AST.Declarations)
     def visit(self, node):
+        result = []
         for declaration in node.declarations:
-            declaration.accept(self)
+            result.append(declaration.accept(self))
+        return result
 
     @when(AST.Declaration)
     def visit(self, node):
@@ -89,8 +93,10 @@ class Interpreter(object):
 
     @when(AST.Inits)
     def visit(self, node, type_):
+        result = []
         for init in node.inits:
-            init.accept(self, type_)
+            result.append(init.accept(self, type_))
+        return result
 
     @when(AST.Init)
     def visit(self, node, type_):
@@ -103,8 +109,10 @@ class Interpreter(object):
 
     @when(AST.Instructions)
     def visit(self, node):
+        result = []
         for instruction in node.instructions:
-            instruction.accept(self)
+            result.append(instruction.accept(self))
+        return result
 
     @when(AST.Print)
     def visit(self, node):
@@ -193,8 +201,10 @@ class Interpreter(object):
 
     @when(AST.ArgumentsList)
     def visit(self, node):
+        result = []
         for arg in node.args:
-            arg.accept(self)
+            result.append(arg.accept(self))
+        return result
 
     @when(AST.Argument)
     def visit(self, node):

@@ -37,7 +37,7 @@ class Float(Const):
 
 class String(Const):
     def __init__(self, lineno, value):
-        Const.__init__(self, lineno, value)
+        Const.__init__(self, lineno, value[1:-1])
 
 class Variable(Const):
     def __init__(self, lineno, name):
