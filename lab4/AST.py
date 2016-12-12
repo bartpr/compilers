@@ -33,6 +33,7 @@ class Integer(Const):
 class Float(Const):
     def __init__(self, lineno, value):
         Const.__init__(self, lineno, value)
+        self.toInt = False
 
 
 class String(Const):

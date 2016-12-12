@@ -44,7 +44,10 @@ class Interpreter(object):
 
     @when(AST.Float)
     def visit(self, node):
-        return float(node.value)
+        if node.toInt:
+            return int(float(node.value))
+        else:
+            return float(node.value)
 
     @when(AST.String)
     def visit(self, node):
@@ -100,9 +103,11 @@ class Interpreter(object):
 
     @when(AST.Init)
     def visit(self, node, type_):
+        if type_ == "int" and type(node.expression) is AST.Float:
+            node.expression.toInt = True
         expression_accept = node.expression.accept(self)
-        if len(self.functionMemory.stack) > 1:
-            self.functionMemory.peek().put(node.id_, expression_accept)
+        if self.functionMemory.in_fun():
+            self.functionMemory.peek().peek().put(node.id_, expression_accept)
         else:
             self.globalMemory.peek().put(node.id_, expression_accept)
         return expression_accept
@@ -132,16 +137,16 @@ class Interpreter(object):
 
     @when(AST.RepeatInstruction)
     def visit(self, node):
-        # while True:
-        #     try:
-        #         node.instructions.accept(self)
-        #         if node.condition.accept(self):
-        #             break
-        #     except BreakException:
-        #         break
-        #     except ContinueException:
-        #         if node.condition.accept(self):
-        #             break
+        while True:
+            try:
+                node.instructions.accept(self)
+                if node.condition.accept(self):
+                    break
+            except BreakException:
+                break
+            except ContinueException:
+                if node.condition.accept(self):
+                    break
         pass
 
     @when(AST.ReturnInstruction)
@@ -159,15 +164,15 @@ class Interpreter(object):
 
     @when(AST.CompoundInstruction)
     def visit(self, node):
-        if len(self.functionMemory.stack) > 1:
-            self.functionMemory.push(Memory(node))
+        if self.functionMemory.in_fun():
+            self.functionMemory.peek().push(Memory(node))
         else:
             self.globalMemory.push(Memory(node))
         if node.declarations is not None:
             node.declarations.accept(self)
         if node.instructions_opt is not None:
             node.instructions_opt.accept(self)
-        if len(self.functionMemory.stack) > 1:
+        if self.functionMemory.in_fun():
             self.functionMemory.peek().pop()
         else:
             self.globalMemory.pop()
@@ -179,7 +184,7 @@ class Interpreter(object):
         if node.expr_list is not None:
             for expr_arg, arg in zip(node.expr_list.expressions, curr_fun.args_list.args):
                 curr_fun_mem.put(arg.accept(self), expr_arg.accept(self))
-        self.functionMemory.push(curr_fun_mem)
+        self.functionMemory.push(MemoryStack(curr_fun_mem))
         try:
             curr_fun.compound_instr.accept(self)
         except ReturnValueException as return_value:
