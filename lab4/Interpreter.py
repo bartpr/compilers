@@ -15,7 +15,7 @@ class Interpreter(object):
     def visit(self, node):
         pass
 
-    @when(AST.BinOp)
+    @when(AST.BinExpr)
     def visit(self, node):
         r1 = node.left.accept(self)
         r2 = node.right.accept(self)
@@ -26,13 +26,6 @@ class Interpreter(object):
         # if(node.op=='+') return r1+r2
         # elsif(node.op=='-') ...
         # but do not use python eval
-
-    @when(AST.RelOp)
-    def visit(self, node):
-        r1 = node.left.accept(self)
-        r2 = node.right.accept(self)
-        # ...
-
     @when(AST.Assignment)
     def visit(self, node):
         pass
