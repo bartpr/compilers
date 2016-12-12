@@ -3,7 +3,7 @@ import filecmp
 import unittest
 import os
 import sys
-
+import warnings
 
 class AcceptanceTests(unittest.TestCase):
     @classmethod
@@ -17,6 +17,7 @@ class AcceptanceTests(unittest.TestCase):
             return 'test_' + filename
 
         def test_func(self):
+            warnings.simplefilter("ignore", ResourceWarning)
             os.system(
                 "\"" + sys.executable + "\" main.py tests/{0} > tests/{1}.actual".format(
                     filename, name))
