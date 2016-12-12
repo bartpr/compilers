@@ -48,6 +48,7 @@ class Interpreter(object):
 
     @when(AST.String)
     def visit(self, node):
+        print(node.value)
         return node.value
 
     @when(AST.Variable)
@@ -60,13 +61,14 @@ class Interpreter(object):
     # simplistic while loop interpretation
     @when(AST.WhileInstruction)
     def visit(self, node):
-        while node.condition.accept(self):
-            try:
-                node.instruction.accept(self)
-            except BreakException:
-                break
-            except ContinueException:
-                pass
+        # while node.condition.accept(self):
+        #     try:
+        #         node.instruction.accept(self)
+        #     except BreakException:
+        #         break
+        #     except ContinueException:
+        #         pass
+        pass
 
     @when(AST.Program)
     def visit(self, node):

@@ -19,7 +19,7 @@ class BinExpr(Node):
 
 
 class Const(Node):
-    def __init__(self, value, lineno):
+    def __init__(self, lineno, value):
         self.value = value
         self.lineno = lineno
 
