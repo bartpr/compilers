@@ -38,10 +38,6 @@ class Interpreter(object):
             self.globalMemory.set(node.id_, expression_accept)
         return expression_accept
 
-    # @when(AST.Const)
-    # def visit(self, node):
-    #     return node.value
-
     @when(AST.Integer)
     def visit(self, node):
         return int(node.value)
@@ -117,7 +113,7 @@ class Interpreter(object):
     def visit(self, node):
         if node.condition.accept(self):
             return node.instruction.accept(self)
-        elif node.alternate_instruction is not None
+        elif node.alternate_instruction is not None:
             return node.alternate_instruction.accept(self)
 
     @when(AST.RepeatInstruction)
@@ -151,12 +147,13 @@ class Interpreter(object):
         #TODO: something with memory
         if node.declarations is not None:
             node.declarations.accept(self)
-        if node.instructions_opt is not None;
+        if node.instructions_opt is not None:
             node.instructions_opt.accept(self)
 
     @when(AST.FunctionExpression)
     def visit(self, node):
         #TODO: body
+        pass
 
     @when(AST.ExpressionList)
     def visit(self, node):
@@ -166,6 +163,7 @@ class Interpreter(object):
     @when(AST.FunctionDefinition)
     def visit(self, node):
         #TODO: body
+        pass
 
     @when(AST.ArgumentsList)
     def visit(self, node):

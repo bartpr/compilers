@@ -209,7 +209,7 @@ class ExpressionList(Node):
     def add_expression(self, expression):
         self.expressions.append(expression)
 
-    def lenght(self):
+    def length(self):
         return len(self.expressions)
 
 

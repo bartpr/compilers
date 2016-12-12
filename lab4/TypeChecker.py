@@ -227,12 +227,14 @@ class TypeChecker(NodeVisitor):
         if connectedFunDef is None or not isinstance(connectedFunDef, SymbolTable.insideTable):
             print("Error: Call of undefined function '{}': line {}".format(node.id_, node.lineno))
         else:
-            if (node.expr_list.lenght()) != len(connectedFunDef.params):
+            expr_list_length = 0 if node.expr_list is None else node.expr_list.length()
+            if expr_list_length != len(connectedFunDef.params):
                 print("Error: Improper number of args in {} call: line {}".format(node.id_, node.lineno))
             else:
                 types =[]
-                for x in node.expr_list.expressions:
-                    types.append(self.visit(x))
+                if node.expr_list is not None:
+                    for x in node.expr_list.expressions:
+                        types.append(self.visit(x))
                 expectedTypes = connectedFunDef.params
                 for actual, expected in zip(types, expectedTypes):
                     if actual != expected and not (actual == "int" and expected == "float"):
@@ -277,7 +279,7 @@ class TypeChecker(NodeVisitor):
         self.table.put(node.id_, new_table)
         self.actual_instr = new_table
         self.table = self.actual_instr.table
-        self.visit(node.instruction)
+        self.visit(node.instructions)
         self.table = self.table.getParentScope()
         self.actual_instr = None
 
