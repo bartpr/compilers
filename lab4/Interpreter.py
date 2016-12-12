@@ -11,7 +11,7 @@ sys.setrecursionlimit(10000)
 class Interpreter(object):
     def __init__(self):
         self.globalMemory = MemoryStack()
-        self.functionMemory = MemoryStack()
+        self.functionMemory = FunctionMemoryStack()
 
     @on('node')
     def visit(self, node):
@@ -32,8 +32,8 @@ class Interpreter(object):
     @when(AST.Assignment)
     def visit(self, node):
         expression_accept = node.expression.accept(self)
-        if self.functionMemory.get(node.id_) is not None and len(self.functionMemory.stack) > 1:
-            self.functionMemory.set(node.id_, expression_accept)
+        if self.functionMemory.in_fun() and self.functionMemory.peek().get(node.id_) is not None:
+            self.functionMemory.peek().set(node.id_, expression_accept)
         else:
             self.globalMemory.set(node.id_, expression_accept)
         return expression_accept
@@ -52,8 +52,8 @@ class Interpreter(object):
 
     @when(AST.Variable)
     def visit(self, node):
-        if self.functionMemory.get(node.name) is not None and len(self.functionMemory.stack) > 1:
-            return self.functionMemory.get(node.name)
+        if self.functionMemory.in_fun() and self.functionMemory.peek().get(node.name) is not None:
+            return self.functionMemory.peek().get(node.name)
         else:
             return self.globalMemory.get(node.name)
 
@@ -168,7 +168,7 @@ class Interpreter(object):
         if node.instructions_opt is not None:
             node.instructions_opt.accept(self)
         if len(self.functionMemory.stack) > 1:
-            self.functionMemory.pop()
+            self.functionMemory.peek().pop()
         else:
             self.globalMemory.pop()
 

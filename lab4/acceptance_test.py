@@ -18,6 +18,7 @@ class AcceptanceTests(unittest.TestCase):
 
         def test_func(self):
             warnings.simplefilter("ignore", ResourceWarning)
+            print("test no: {0}", filename)
             os.system(
                 "\"" + sys.executable + "\" main.py tests/{0} > tests/{1}.actual".format(
                     filename, name))

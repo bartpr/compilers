@@ -240,13 +240,10 @@ class Cparser(object):
 
         p[0] = p[1]
 
-
     def p_const(self, p):
         """const : INTEGER
                  | FLOAT
                  | STRING"""
-
-        #p[0] = p[1]
         if re.match(r"\d+(\.\d*)|\.\d+", p[1]):
             p[0] = AST.Float(p.lineno(1), p[1])
         elif re.match(r"\d+", p[1]):

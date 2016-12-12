@@ -49,3 +49,25 @@ class MemoryStack:
 
     def pop(self):          # pops the top memory from the stack
         return self.stack.pop()
+
+
+
+class FunctionMemoryStack:
+    def __init__(self, stack=None):  # initialize memory stack with memory <memory>
+        self.stack = []
+        if stack is not None:
+            self.stack.append(stack)
+        else:
+            self.stack.append(MemoryStack())
+
+    def in_fun(self):
+        return len(self.stack) > 1;
+
+    def push(self, stack):  # pushes memory <memory> onto the stack
+        self.stack.append(stack)
+
+    def pop(self):  # pops the top memory from the stack
+        return self.stack.pop()
+
+    def peek(self):
+        return self.stack[-1]
