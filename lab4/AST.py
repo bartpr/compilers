@@ -30,7 +30,7 @@ class Integer(Const):
 
 
 
-class Float( Const):
+class Float(Const):
     def __init__(self, lineno, value):
         Const.__init__(self, lineno, value)
 

@@ -32,7 +32,7 @@ class Interpreter(object):
     @when(AST.Assignment)
     def visit(self, node):
         expression_accept = node.expression.accept(self)
-        if self.functionMemory.get(node.id_) is not None:
+        if self.functionMemory.get(node.id_) is not None and len(self.functionMemory.stack) > 1:
             self.functionMemory.set(node.id_, expression_accept)
         else:
             self.globalMemory.set(node.id_, expression_accept)
@@ -52,7 +52,7 @@ class Interpreter(object):
 
     @when(AST.Variable)
     def visit(self, node):
-        if self.functionMemory.get(node.name) is not None:
+        if self.functionMemory.get(node.name) is not None and len(self.functionMemory.stack) > 1:
             return self.functionMemory.get(node.name)
         else:
             return self.globalMemory.get(node.name)
@@ -111,7 +111,7 @@ class Interpreter(object):
 
     @when(AST.LabeledInstruction)
     def visit(self, node):
-        node.instruction.accept(self, node.id_)
+        pass
 
     @when(AST.ChoiceInstruction)
     def visit(self, node):
@@ -122,16 +122,17 @@ class Interpreter(object):
 
     @when(AST.RepeatInstruction)
     def visit(self, node):
-        while True:
-            try:
-                node.instructions.accept(self)
-                if node.condition.accept(self):
-                    break
-            except BreakException:
-                break
-            except ContinueException:
-                if node.condition.accept(self):
-                    break
+        # while True:
+        #     try:
+        #         node.instructions.accept(self)
+        #         if node.condition.accept(self):
+        #             break
+        #     except BreakException:
+        #         break
+        #     except ContinueException:
+        #         if node.condition.accept(self):
+        #             break
+        pass
 
     @when(AST.ReturnInstruction)
     def visit(self, node):
