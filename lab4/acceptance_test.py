@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# coding: utf-8
 import filecmp
 import unittest
 import os
@@ -17,7 +18,7 @@ class AcceptanceTests(unittest.TestCase):
             return 'test_' + filename
 
         def test_func(self):
-            warnings.simplefilter("ignore", ResourceWarning)
+            # warnings.simplefilter("ignore", ResourceWarning)
             print("test no: {0}", filename)
             os.system(
                 "\"" + sys.executable + "\" main.py tests/{0} > tests/{1}.actual".format(

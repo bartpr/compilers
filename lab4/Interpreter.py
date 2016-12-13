@@ -1,4 +1,4 @@
-
+#!/usr/bin/env python
 import AST
 import SymbolTable
 from Memory import *
@@ -26,7 +26,6 @@ class Interpreter(object):
         else:
             return eval("a" + node.op + "b", {"a": r1, "b": r2})
 
-        #TODO: ponizszy kutowy komentarz
         # try sth smarter than:
         # if(node.op=='+') return r1+r2
         # elsif(node.op=='-') ...
@@ -73,7 +72,6 @@ class Interpreter(object):
                 break
             except ContinueException:
                 pass
-        # pass
 
     @when(AST.Program)
     def visit(self, node):
@@ -125,7 +123,7 @@ class Interpreter(object):
     @when(AST.Print)
     def visit(self, node):
         for item in node.expr_list.accept(self):
-            print(item, end='\r\n')
+            print "{}\r".format(item)
 
     @when(AST.LabeledInstruction)
     def visit(self, node):
@@ -150,7 +148,6 @@ class Interpreter(object):
             except ContinueException:
                 if node.condition.accept(self):
                     break
-        pass
 
     @when(AST.ReturnInstruction)
     def visit(self, node):

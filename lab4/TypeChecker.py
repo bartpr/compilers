@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# coding: utf-8
 import AST
 from SymbolTable import *
 from collections import defaultdict
