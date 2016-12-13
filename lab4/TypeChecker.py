@@ -156,7 +156,6 @@ class TypeChecker(NodeVisitor):
             if not self.lookingForReturn(node.compound_instr):
                 print("Error: Missing return statement in function '{0}' returning {1}: line {2}".format(node.id_,
                                                                                                          node.type_, node.compound_instr.endLine))
-    #TODO: ładniejsze sprawdzenie, czy return - użyć boola i sprawdzać po kolei w xInstruction
     def lookingForReturn(self, node):  # node to jest ccia�o funkcji wy�ej
         if isinstance(node, AST.Instructions):
             nodeList = node.instructions
@@ -192,10 +191,16 @@ class TypeChecker(NodeVisitor):
 
     #TODO: Zasięg wąsów do compound_instr, a nie w instrukcjach bezpośrednio i w definicji funkcji(?)
     def visit_CompoundInstruction(self, node):
+        new_table = SymbolTable.insideTable(node.id_, node.__class__.__name__, SymbolTable(self.table, node.id_))
+        self.table.put(node.id_, new_table)
+        self.actual_instr = new_table
+        self.table = self.actual_instr.table
         if node.declarations is not None:
             self.visit(node.declarations)
         if node.instructions_opt is not None:
             self.visit(node.instructions_opt)
+        self.table = self.table.getParentScope()
+        self.actual_instr = None
 
     def visit_Instructions(self, node):
         for instruction in node.instructions:
@@ -245,43 +250,19 @@ class TypeChecker(NodeVisitor):
 
     def visit_ChoiceInstruction(self, node):
         self.visit(node.condition)
-        new_table = SymbolTable.insideTable(node.id_, node.__class__.__name__, SymbolTable(self.table, node.id_))
-        self.table.put(node.id_, new_table)
-        self.actual_instr = new_table
-        self.table = self.actual_instr.table
         self.visit(node.instruction)
-        self.table = self.table.getParentScope()
-        self.actual_instr = None
         if node.alternate_instruction is not None:
-            new_table = SymbolTable.insideTable(node.id_, node.__class__.__name__ + "alternate", SymbolTable(self.table, node.id_))
-            self.table.put(node.id_, new_table)
-            self.actual_instr = new_table
-            self.table = self.actual_instr.table
             self.visit(node.alternate_instruction)
-            self.table = self.table.getParentScope()
-            self.actual_instr = None
 
     def visit_WhileInstruction(self, node):
         self.inLoop = True
         self.visit(node.condition)
-        new_table = SymbolTable.insideTable(node.id_, node.__class__.__name__, SymbolTable(self.table, node.id_))
-        self.table.put(node.id_, new_table)
-        self.actual_loop = new_table
-        self.table = self.actual_loop.table
         self.visit(node.instruction)
-        self.table = self.table.getParentScope()
-        self.actual_loop = None
         self.inLoop = False
 
     def visit_RepeatInstruction(self, node):
         self.visit(node.condition)
-        new_table = SymbolTable.insideTable(node.id_, node.__class__.__name__, SymbolTable(self.table, node.id_))
-        self.table.put(node.id_, new_table)
-        self.actual_instr = new_table
-        self.table = self.actual_instr.table
         self.visit(node.instructions)
-        self.table = self.table.getParentScope()
-        self.actual_instr = None
 
     def visit_Assignment(self, node):
         definition = self.table.getGlobal(node.id_)
