@@ -189,7 +189,6 @@ class TypeChecker(NodeVisitor):
         self.table.put(node.id_, VariableSymbol(node.id_, node.type_))
 
 
-    #TODO: Zasięg wąsów do compound_instr, a nie w instrukcjach bezpośrednio i w definicji funkcji(?)
     def visit_CompoundInstruction(self, node):
         new_table = SymbolTable.insideTable(node.id_, node.__class__.__name__, SymbolTable(self.table, node.id_))
         self.table.put(node.id_, new_table)
@@ -261,8 +260,10 @@ class TypeChecker(NodeVisitor):
         self.inLoop = False
 
     def visit_RepeatInstruction(self, node):
+        self.inLoop = True
         self.visit(node.condition)
         self.visit(node.instructions)
+        self.inLoop = False
 
     def visit_Assignment(self, node):
         definition = self.table.getGlobal(node.id_)
