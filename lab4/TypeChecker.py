@@ -63,7 +63,7 @@ class TypeChecker(NodeVisitor):
     def __init__(self):
         self.table = SymbolTable(None, "root")
         self.actualType = ""
-        self.inLoop = False;
+        self.inLoop = 0
 
 
 
@@ -125,11 +125,11 @@ class TypeChecker(NodeVisitor):
         return 'int'
 
     def visit_BreakInstruction(self, node):
-        if not self.inLoop:
+        if self.inLoop == 0:
             print("Error: break instruction outside a loop: line {}".format(node.lineNo))
 
     def visit_ContinueInstruction(self, node):
-        if not self.inLoop:
+        if self.inLoop == 0:
             print("Error: continue instruction outside a loop: line {}".format(node.lineNo))
 
     def visit_ReturnInstruction(self, node):
@@ -254,16 +254,16 @@ class TypeChecker(NodeVisitor):
             self.visit(node.alternate_instruction)
 
     def visit_WhileInstruction(self, node):
-        self.inLoop = True
+        self.inLoop += 1
         self.visit(node.condition)
         self.visit(node.instruction)
-        self.inLoop = False
+        self.inLoop -= 1
 
     def visit_RepeatInstruction(self, node):
-        self.inLoop = True
+        self.inLoop += 1
         self.visit(node.condition)
         self.visit(node.instructions)
-        self.inLoop = False
+        self.inLoop -= 1
 
     def visit_Assignment(self, node):
         definition = self.table.getGlobal(node.id_)
