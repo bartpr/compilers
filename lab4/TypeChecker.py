@@ -65,6 +65,8 @@ class TypeChecker(NodeVisitor):
         self.table = SymbolTable(None, "root")
         self.actualType = ""
         self.inLoop = 0
+        self.inFunDef = False
+        self.depth = 0
 
 
 
@@ -151,8 +153,10 @@ class TypeChecker(NodeVisitor):
             self.table = self.actualFun.table
             if node.args_list is not None:
                 self.visit(node.args_list)
+            self.inFunDef = True
             self.visit(node.compound_instr)
             self.table = self.table.getParentScope()
+            self.inFunDef = False
             self.actualFun = None
             if not self.lookingForReturn(node.compound_instr):
                 print("Error: Missing return statement in function '{0}' returning {1}: line {2}".format(node.id_,
@@ -191,16 +195,20 @@ class TypeChecker(NodeVisitor):
 
 
     def visit_CompoundInstruction(self, node):
-        new_table = SymbolTable.insideTable(node.id_, node.__class__.__name__, SymbolTable(self.table, node.id_))
-        self.table.put(node.id_, new_table)
-        self.actual_instr = new_table
-        self.table = self.actual_instr.table
+        if not self.inFunDef or self.depth != 0:
+            new_table = SymbolTable.insideTable(node.id_, node.__class__.__name__, SymbolTable(self.table, node.id_))
+            self.table.put(node.id_, new_table)
+            self.actual_instr = new_table
+            self.table = self.actual_instr.table
+        self.depth += 1
         if node.declarations is not None:
             self.visit(node.declarations)
         if node.instructions_opt is not None:
             self.visit(node.instructions_opt)
-        self.table = self.table.getParentScope()
-        self.actual_instr = None
+        self.depth -= 1
+        if not self.inFunDef or self.depth != 0:
+            self.table = self.table.getParentScope()
+            self.actual_instr = None
 
     def visit_Instructions(self, node):
         for instruction in node.instructions:
